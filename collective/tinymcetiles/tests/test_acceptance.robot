@@ -29,7 +29,7 @@ Del Boy opens a chippie using tiles
     narrate "He logs in"
     Given a site owner
     click link  Home
-    Click link  css=dl#plone-contentmenu-factories dt.actionMenuHeader a
+    click add new
     ${n} =  add pointy note  css=a.contenttype-document
     ...    First he creates a new page
     ...    position=left
@@ -38,17 +38,24 @@ Del Boy opens a chippie using tiles
     ${n} =  add pointy note  css=dl#plone-contentmenu-factories dd.actionMenuContent
     ...    note the add new menu no longer includes folder or collection
     ...    position=left
-    Click link  css=a#document
+    add new page
     with the label  Title  input text  Menus
     with the label  Summary  input text  "only fools and chips" takeaway menu
-    visual edit "We strive to make the best fish and chips your unemployment benifit can buy"
-    #uploads a picture of the shop.
+    visual edit "We strive to make the best fish and chips your unemployment benefit can buy"
+    #uploads a pic the shop.
+    click button  Save
 
-    click button  save
     #(note the pic goes into the page and the page appears as "menu" in the top nav.
     # Note also display menu is gone)
 
-    Next we wants to add his menu items. clicks add page (note we're now on a subpage called fish. note no adding folder, no default pages)
+    narrate "Now he needs to add his menu items"
+    click add new
+    add new page
+    with the label  Title  Fish
+    with the label  Summary  Cod dipped in fat
+    narrate "We just added a page within a page"
+    narrate "No fiddling with Folders or default page display settings"
+
     enters fish description and uploads image of his fish (note fish image isn't appearing in side nav as its inside fish page)
     goes back to menu page
     Now we wants to list his menu. He clicks edit, adds "The chippie menu" sub title and then clicks "add tile" button.
@@ -63,9 +70,16 @@ Del Boy opens a chippie using tiles
 
 *** Keywords ***
 
+click add new
+    Click link  css=dl#plone-contentmenu-factories dt.actionMenuHeader a
+
+add new page
+    Click link  css=a#document
+
+
 visual edit "${text}"
     select frame  id=text_ifr
-    Input text  id=tinymce  ${text}
+    Input text  id=content  ${text}
     unselect frame
     # see http://stackoverflow.com/questions/17306305/how-to-select-the-text-of-a-tinymce-field-with-robot-framework-and-selenium2libr
 
