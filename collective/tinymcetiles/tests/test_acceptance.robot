@@ -3,6 +3,7 @@
 Resource  plone/app/robotframework/selenium.robot
 Resource  plone/app/robotframework/keywords.robot
 Resource  Selenium2Screenshots/keywords.robot
+Library   collective.tinymcetiles.tests.test_acceptance.Keywords
 
 Library  Remote  ${PLONE_URL}/RobotRemote
 
@@ -42,7 +43,10 @@ Del Boy opens a chippie using tiles
     with the label  Title  input text  Menus
     with the label  Summary  input text  "only fools and chips" takeaway menu
     visual edit "We strive to make the best fish and chips your unemployment benefit can buy"
+
     #uploads a pic the shop.
+    upload image  http://londonist.com/wp-content/uploads/2012/02/fryerssign-587x500.png
+
     click button  Save
 
     #(note the pic goes into the page and the page appears as "menu" in the top nav.
@@ -56,7 +60,7 @@ Del Boy opens a chippie using tiles
     narrate "We just added a page within a page"
     narrate "No fiddling with Folders or default page display settings"
 
-    enters fish description and uploads image of his fish (note fish image isn't appearing in side nav as its inside fish page)
+    uploads image of his fish (note fish image isn't appearing in side nav as its inside fish page)
     goes back to menu page
     Now we wants to list his menu. He clicks edit, adds "The chippie menu" sub title and then clicks "add tile" button.
     he selects listingtile. (note by default its query already shows folder contents so no need to change). He selects summary view. Hits create.
@@ -76,12 +80,25 @@ click add new
 add new page
     Click link  css=a#document
 
-
 visual edit "${text}"
     select frame  id=text_ifr
     Input text  id=content  ${text}
     unselect frame
     # see http://stackoverflow.com/questions/17306305/how-to-select-the-text-of-a-tinymce-field-with-robot-framework-and-selenium2libr
+
+upload image
+    [arguments]     ${url}
+    click link  css=#text_image
+    select frame  css=.plonepopup iframe
+    #click link  External
+    #input text  css=#imageurl  ${url}
+    ${file}=  download file  ${url}
+    click link  upload
+    choose file  id=uploadfile  ${file}
+    click button  Upload
+    click button  OK
+    click button  OK
+
 
 Narrate "${text}"
     ${note1} =  Add note  css=body
