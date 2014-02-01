@@ -32,8 +32,8 @@ class IntegrationTestCase(unittest.TestCase):
 
     def test_tinymce_configured(self):
         tinymce = getUtility(ITinyMCE)
-        self.failUnless(
-            'plonetiles|/++resource++collective.tinymcetiles.plugin/editor_plugin.js' in tinymce.customplugins)
+        self.assertIn(
+            'plonetiles|/++resource++collective.tinymcetiles.plugin/editor_plugin.js', tinymce.customplugins)
         self.assertIn('plonetiles', tinymce.customtoolbarbuttons)
 
     def test_tile_rendering(self):
