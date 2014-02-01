@@ -76,18 +76,39 @@ Del Boy opens a chippie using tiles
     ${n}=  label "Content listing"
     show pointy note  ${n}  "Content listing tiles replaces collections"
     with the label  Content listing  select checkbox
+    click button  Create
+
+    element should be visible  css=.criteria
     show pointy note  css=.criteria
     ...     The default query lists the local context
     ${n}=  label "Display mode"
     show pointy note  ${n}  "He can choose how he wants it displayed"
     select from list by label  ${n}  Summary view
-    click button  Create
+    click button  Save
 
-    In the editor he sees a shortcode and a preview of what the listing will look like (hopefully)
-    he clicks save and views the page which includes the fish, description and thumbnail of the fish image
-    now he wants to extend his menu. he adds new page called "chips".
-    enters chips description and uploads pic of chips.
-    clicks back up to "menu" page and shows that chips automatically got added to the menu listing
+    #TODO
+    #In the editor he sees a shortcode and a preview of what the listing will look like (hopefully)
+    narrate "The tile is inserted as a shortcode"
+    narrate "including a preview of what the listing will look like"
+
+    click button  Save
+    narrate "He now has a page his fish automatically listed"
+    #TODO make listingview include thumbnail?
+    page should contain  Cod dipped in fat
+
+    narrate "Now he wants to extend is menu by adding Chips"
+    click add new
+    add new page
+    with the label  Title  input text  Chips
+    with the label  Summary  input text  Potato dipped in fat
+    #upload image  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
+    click button  Save
+    click link  Menus
+
+    #TODO point at chip item
+    narrate "Chips have automatically been added to the menu"
+    page should contain  Potato dipped in fat
+
 
 
 
