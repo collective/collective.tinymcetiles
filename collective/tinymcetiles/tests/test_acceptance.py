@@ -3,6 +3,7 @@ import unittest
 import robotsuite
 from plone.testing import layered
 from collective.tinymcetiles.testing import TILES_ROBOT_TESTING
+import urllib
 
 
 def test_suite():
@@ -12,3 +13,11 @@ def test_suite():
                 layer=TILES_ROBOT_TESTING),
     ])
     return suite
+
+
+class Keywords(object):
+    """Robot Framework keyword library"""
+
+    def download_file(self, url):
+        filename, headers = urllib.urlretrieve(url)
+        return filename
