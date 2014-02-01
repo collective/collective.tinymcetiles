@@ -38,9 +38,7 @@ class IntegrationTestCase(unittest.TestCase):
         self.folder = self.portal['test-folder']
         self.folder.invokeFactory('Document', 'd1')
         self.folder['d1'].setTitle(u"New title")
-        self.folder['d1'].setText(u"""\
-<p>[dummy.tile/tile-1 /]</p>
-""")
+        self.folder['d1'].setText(u"<p>[dummy.tile/tile-1 /]</p>")
         self.folder['d1'].getField('text').setContentType(self.folder['d1'],
                                                           "text/html")
 
