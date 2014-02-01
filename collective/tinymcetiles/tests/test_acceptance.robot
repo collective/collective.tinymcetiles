@@ -45,9 +45,6 @@ Del Boy opens a chippie using tiles
 
     click button  Save
 
-    #TODO remove
-    click link  Home
-
     narrate "The image is stored in the page, no need to create a folder"
     show pointy note  css=dl#plone-contentmenu-factories dd.actionMenuContent
     ...    note the display menu is gone
@@ -112,7 +109,7 @@ add new page
     Click link  css=a#document
 
 visual edit "${text}"
-    select frame  id=text_ifr
+    select frame  css=.mceIframeContainer iframe
     Input text  id=content  ${text}
     unselect frame
     # see http://stackoverflow.com/questions/17306305/how-to-select-the-text-of-a-tinymce-field-with-robot-framework-and-selenium2libr
