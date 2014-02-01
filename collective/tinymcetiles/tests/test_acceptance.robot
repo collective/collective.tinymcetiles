@@ -41,7 +41,7 @@ Del Boy opens a chippie using tiles
     visual edit "We strive to make the best fish and chips your unemployment benefit can buy"
 
     #uploads a pic the shop.
-    upload image  http://images.smh.com.au/2012/01/20/2905552/MJtravelwide6_20120120132625161061-420x0.jpg
+    #upload image  http://images.smh.com.au/2012/01/20/2905552/MJtravelwide6_20120120132625161061-420x0.jpg
 
     click button  Save
 
@@ -58,7 +58,7 @@ Del Boy opens a chippie using tiles
     with the label  Title  input text  Fish
     with the label  Summary  input text  Cod dipped in fat
 
-    upload image  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
+    #upload image  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
     click button  Save
     click link  Menus
 
