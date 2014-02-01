@@ -2,6 +2,7 @@ from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.app.testing import login
+from plone.app.textfield import RichTextValue
 import transaction
 import unittest2 as unittest
 from zope.component import getUtility
@@ -37,11 +38,15 @@ class IntegrationTestCase(unittest.TestCase):
         self.assertIn('plonetiles', tinymce.customtoolbarbuttons)
 
     def test_tile_rendering(self):
-        self.portal.invokeFactory('Folder', 'test-folder')
+        try:
+            self.portal.invokeFactory('Folder', 'test-folder')
+        except:
+            self.portal.invokeFactory('Document', 'test-folder')
         self.folder = self.portal['test-folder']
         self.folder.invokeFactory('Document', 'd1')
-        self.folder['d1'].setTitle(u'New title')
-        self.folder['d1'].setText(u"""\
+        d1 = self.folder.get('d1')
+        d1.setTitle(u'New title')
+        d1.text = RichTextValue(raw="""\
 <p>
     <img
         src="/++resource++collective.tinymcetiles.plugin/placeholder.gif"
@@ -49,18 +54,14 @@ class IntegrationTestCase(unittest.TestCase):
         class="mceItem mceTile"
         />
 </p>
-""")
-        self.folder['d1'].getField('text').setContentType(self.folder['d1'],
-                                                          'text/html')
+""", mimeType='text/html')
 
-        #        pw = getToolByName(self.portal, 'portal_workflow')
-        #        pw.doActionFor(self.folder['d1'], 'publish')
         transaction.commit()
 
         browser = Browser(self.portal)
         browser.handleErrors = False
 
-        browser.open(self.folder['d1'].absolute_url())
+        browser.open(d1.absolute_url())
         self.assertIn('Test tile rendered', browser.contents)
         self.assertIn('<p>With child tags</p>', browser.contents)
         self.assertIn('And tail text', browser.contents)
