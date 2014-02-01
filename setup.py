@@ -31,7 +31,10 @@ setup(name='collective.tinymcetiles',
       extras_require={
         'test': ['plone.app.testing',
                  'plone.app.robotframework>=0.7.0rc4',
-                 'plone.app.texttile'],
+                 'plone.app.texttile',
+                 'plone.app.contentlistingtile',
+                 'plone.app.contenttypes',
+                 'plone.app.event'],
       },
       entry_points="""
       [z3c.autoinclude.plugin]

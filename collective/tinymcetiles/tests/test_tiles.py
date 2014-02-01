@@ -24,14 +24,14 @@ class IntegrationTestCase(unittest.TestCase):
 
     def test_js_installed(self):
         pj = getToolByName(self.portal, 'portal_javascripts')
-        self.failUnless(
-            '++resource++collective.tinymcetiles.plugin/event.js' in pj.getResourceIds())
+        self.assertIn(
+            '++resource++collective.tinymcetiles.plugin/event.js', pj.getResourceIds())
 
     def test_tinymce_configured(self):
         tinymce = getUtility(ITinyMCE)
-        self.failUnless(
-            'plonetiles|/++resource++collective.tinymcetiles.plugin/editor_plugin.js' in tinymce.customplugins)
-        self.failUnless('plonetiles' in tinymce.customtoolbarbuttons)
+        self.assertIn(
+            'plonetiles|/++resource++collective.tinymcetiles.plugin/editor_plugin.js', tinymce.customplugins)
+        self.assertIn('plonetiles', tinymce.customtoolbarbuttons)
 
     def test_tile_rendering(self):
         self.portal.invokeFactory('Folder', 'test-folder')
@@ -39,13 +39,7 @@ class IntegrationTestCase(unittest.TestCase):
         self.folder.invokeFactory('Document', 'd1')
         self.folder['d1'].setTitle(u"New title")
         self.folder['d1'].setText(u"""\
-<p>
-    <img
-        src="/++resource++collective.tinymcetiles.plugin/placeholder.gif"
-        alt="./@@dummy.tile/tile-1"
-        class="mceItem mceTile"
-        />
-</p>
+<p>[dummy.tile/tile-1 /]</p>
 """)
         self.folder['d1'].getField('text').setContentType(self.folder['d1'],
                                                           "text/html")
@@ -58,9 +52,9 @@ class IntegrationTestCase(unittest.TestCase):
         browser.handleErrors = False
 
         browser.open(self.folder['d1'].absolute_url())
-        self.failUnless("Test tile rendered" in browser.contents)
-        self.failUnless("<p>With child tags</p>" in browser.contents)
-        self.failUnless("And tail text" in browser.contents)
+        self.assertIn("Test tile rendered", browser.contents)
+        self.assertIn("<p>With child tags</p>", browser.contents)
+        self.assertIn("And tail text", browser.contents)
 
 
 def test_suite():

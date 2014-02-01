@@ -1,7 +1,7 @@
+from urlparse import urljoin
 from plone.transformchain.interfaces import ITransform
 from plone.app.blocks import utils
 from repoze.xmliter.serializer import XMLSerializer
-from zope.component import getMultiAdapter
 from zope.interface import implements
 
 import logging
@@ -19,7 +19,7 @@ SHORTCODE_TO_TILE_MAPPING = {
 SHORTCODE_REGEXP = re.compile(
     r'\['  # Opening bracket
     r'(?P<escapeopen>\[?)'  # 1: Optional second opening bracket for escaping snippets: [[tag]]
-    r'(?P<name>[\w\d\_-]+)'  # 2: Snippet name
+    r'(?P<name>[/\w\d\_\.-]+)'  # 2: Snippet name
     r'\b'  # Word boundary
     r'(?P<arguments>'  # 3: Unroll the loop: Inside the opening snippet tag
     r'[^\]\/]*'  # Not a closing bracket or forward slash
@@ -151,12 +151,15 @@ class ShortcodesTransform(object):
 
     def _create_tile(self, name=None, params=None):
         """Create a transient tile."""
-        name = SHORTCODE_TO_TILE_MAPPING.get(name, None)
-        if not name:
-            return None
+        if name in SHORTCODE_TO_TILE_MAPPING:
+            name = SHORTCODE_TO_TILE_MAPPING.get(name, None)
+        baseURL = self.request.getURL()
+        tileHref = urljoin(baseURL, '@@' + name)
 
         # create a new transient tile
-        context = self.published.aq_parent
+        #context = self.published.aq_parent
+        #HACK: we need to encode it into the url again
         self.request.form.update(params)
-        tile = getMultiAdapter((context, self.request), name=name)
-        return utils.resolve(tile.url)
+        #tile = getMultiAdapter((context, self.request), name=name)
+
+        return utils.resolve(tileHref)
