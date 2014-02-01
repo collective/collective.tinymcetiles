@@ -23,6 +23,7 @@ setup(name='collective.tinymcetiles',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'plone.api',
           'plone.app.tiles',
           'plone.app.blocks',
           'Products.TinyMCE',
