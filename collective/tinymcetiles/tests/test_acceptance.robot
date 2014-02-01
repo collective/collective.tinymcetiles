@@ -109,7 +109,7 @@ add new page
     Click link  css=a#document
 
 visual edit "${text}"
-    select frame  id=text_ifr
+    select frame  css=.mceIframeContainer iframe
     Input text  id=content  ${text}
     unselect frame
     # see http://stackoverflow.com/questions/17306305/how-to-select-the-text-of-a-tinymce-field-with-robot-framework-and-selenium2libr
