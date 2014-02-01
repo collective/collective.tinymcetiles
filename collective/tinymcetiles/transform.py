@@ -67,12 +67,12 @@ def resolveTiles(request, tree):
     headNode = root.find('head')
 
     # Find all tile placeholders
-    for tilePlaceholderNode in root.cssselect("img.mceTile"):
+    for tilePlaceholderNode in root.cssselect('img.mceTile'):
 
         try:
             tileHref = tilePlaceholderNode.get('alt', None)
             if not tileHref:
-                log.error("Could not render tile at %s", tileHref)
+                log.error('Could not render tile at %s', tileHref)
                 continue
             tileHref = urljoin(baseURL, tileHref)
             tileTree = utils.resolve(tileHref)
@@ -81,7 +81,7 @@ def resolveTiles(request, tree):
         except ConflictError:
             raise
         except Exception:
-            log.exception("Could not render tile at %s", tileHref)
+            log.exception('Could not render tile at %s', tileHref)
             continue
 
     return tree

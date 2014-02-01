@@ -88,10 +88,10 @@ TILES_FIXTURE = TilesLayer()
 
 TILES_INTEGRATION_TESTING = IntegrationTesting(
     bases=(TILES_FIXTURE,),
-    name="collective.tinymcetiles:Integration")
+    name='collective.tinymcetiles:Integration')
 TILES_FUNCTIONAL_TESTING = FunctionalTesting(
     bases=(TILES_FIXTURE,),
-    name="collective.tinymcetiles:Functional")
+    name='collective.tinymcetiles:Functional')
 
 TILES_ROBOT_TESTING = FunctionalTesting(
     bases=(TILES_FIXTURE,
