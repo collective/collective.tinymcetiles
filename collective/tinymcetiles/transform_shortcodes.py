@@ -1,13 +1,18 @@
-from urlparse import urljoin
+from lxml.html import builder as E
 from plone.transformchain.interfaces import ITransform
 from plone.app.blocks import utils
 from repoze.xmliter.serializer import XMLSerializer
+from urlparse import urljoin
 from zope.interface import implements
 
 import logging
 import re
 
 logger = logging.getLogger('collective.tinymcetiles')
+
+# if a shortcode contains this parameter it means that it represents
+# a persistent tile
+TILE_ID_PARAM = 'tile_id'
 
 # use friendly names for shortcodes
 # XXX: just a temp solution
@@ -109,6 +114,21 @@ class ShortcodesTransform(object):
         tile_body = tile_tree.find('body')
         if tile_body is not None:
             element.text = tile_body.text
+
+        # insert tile target with tile body
+        tileBody = tile_tree.find('body')
+        if tileBody is not None:
+
+            # Preserve text
+            if tileBody.text:
+                tileTextSpan = E.SPAN()
+                tileTextSpan.text = tileBody.text
+                element.addnext(tileTextSpan)
+
+            # Copy other nodes
+            for tileBodyChild in tileBody:
+                element.addnext(tileBodyChild)
+
         return tree
 
     def _get_tile_tree(self, text):
@@ -147,19 +167,32 @@ class ShortcodesTransform(object):
             return (infos['name'], arguments)
 
         name, arguments = parse_text(text)
-        return self._create_tile(name=name, params=arguments)
+        return self._get_tile(name=name, arguments=arguments)
 
-    def _create_tile(self, name=None, params=None):
-        """Create a transient tile."""
+    def _get_tile(self, name=None, arguments=None):
+        """Get the tile for the specified shortcode arguments.
+
+        :param name: friendly name of the tile, which maps to the actual
+                     tile id
+        :param arguments: arguments for tile creation
+        """
+        if name is None or arguments is None:
+            return
+
         if name in SHORTCODE_TO_TILE_MAPPING:
-            name = SHORTCODE_TO_TILE_MAPPING.get(name, None)
+            name = SHORTCODE_TO_TILE_MAPPING[name]
         baseURL = self.request.getURL()
         tileHref = urljoin(baseURL, '@@' + name)
+
+        # persistent tile
+        if TILE_ID_PARAM in arguments:
+            tileId = arguments[TILE_ID_PARAM].strip()
+            tileHref = '{0}/{1}'.format(tileHref, tileId)
 
         # create a new transient tile
         #context = self.published.aq_parent
         #HACK: we need to encode it into the url again
-        self.request.form.update(params)
+        self.request.form.update(arguments)
         #tile = getMultiAdapter((context, self.request), name=name)
 
         return utils.resolve(tileHref)
