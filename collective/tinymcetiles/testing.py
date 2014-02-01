@@ -3,6 +3,7 @@ from plone.app.testing import IntegrationTesting, FunctionalTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
+from plone.testing import z2
 from plone.testing.z2 import ZSERVER_FIXTURE
 from plone.tiles import Tile
 from zope.configuration import xmlconfig
@@ -33,8 +34,9 @@ class TilesLayer(PloneSandboxLayer):
 #                       context=configurationContext)
 #        xmlconfig.file('configure.zcml', plone.app.event,
 #                       context=configurationContext)
-#        xmlconfig.file('configure.zcml', plone.app.contenttypes,
-#                       context=configurationContext)
+        z2.installProduct(app, 'Products.DateRecurringIndex')
+        xmlconfig.file('configure.zcml', plone.app.contenttypes,
+                       context=configurationContext)
         xmlconfig.file('configure.zcml', collective.tinymcetiles,
                        context=configurationContext)
         xmlconfig.file('configure.zcml', plone.app.contentlistingtile,
@@ -53,8 +55,12 @@ class TilesLayer(PloneSandboxLayer):
 </configure>
 """, context=configurationContext)
 
+    def tearDownZope(self, app):
+        # Uninstall products installed above
+        z2.uninstallProduct(app, 'Products.DateRecurringIndex')
+
     def setUpPloneSite(self, portal):
-#        applyProfile(portal, 'plone.app.contenttypes:default')
+        applyProfile(portal, 'plone.app.contenttypes:default')
         applyProfile(portal, 'collective.tinymcetiles:default')
         applyProfile(portal, 'plone.app.contentlistingtile:default')
         #        applyProfile(portal, 'plone.app.texttile:default')
