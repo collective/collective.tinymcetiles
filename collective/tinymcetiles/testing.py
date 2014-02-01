@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 from plone.app.robotframework.testing import REMOTE_LIBRARY_BUNDLE_FIXTURE
-from plone.app.testing import IntegrationTesting, FunctionalTesting
+from plone.app.testing import applyProfile
+from plone.app.testing import FunctionalTesting
+from plone.app.testing import IntegrationTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
-from plone.app.testing import applyProfile
+from plone.registry.interfaces import IRegistry
 from plone.testing import z2
 from plone.testing.z2 import ZSERVER_FIXTURE
 from plone.tiles import Tile
-from zope.configuration import xmlconfig
 from zope.component import getUtility
-from plone.registry.interfaces import IRegistry
+from zope.configuration import xmlconfig
+
 import collective.tinymcetiles
-import plone.app.contenttypes
 import plone.app.contentlistingtile
+import plone.app.contenttypes
 import plone.app.event
 
 
