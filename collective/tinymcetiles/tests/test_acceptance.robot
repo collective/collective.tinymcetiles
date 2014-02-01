@@ -12,7 +12,7 @@ Test Teardown  Close all browsers
 
 *** Variables ***
 ${SLEEP}  3.5s
-
+# to speed up: bin/robot -t "Del Boy opens a chippie using tiles" -v SLEEP:0s
 
 *** Test Cases ***
 
