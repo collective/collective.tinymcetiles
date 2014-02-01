@@ -9,6 +9,9 @@ from zope.configuration import xmlconfig
 from zope.component import getUtility
 from plone.registry.interfaces import IRegistry
 import collective.tinymcetiles
+import plone.app.contenttypes
+import plone.app.contentlistingtile
+import plone.app.event
 
 
 class DummyTile(Tile):
@@ -26,7 +29,15 @@ class TilesLayer(PloneSandboxLayer):
     def setUpZope(self, app, configurationContext):
         # Load ZCML for this package
 
+#        xmlconfig.file('configure.zcml', Products.DateRecurringIndex,
+#                       context=configurationContext)
+#        xmlconfig.file('configure.zcml', plone.app.event,
+#                       context=configurationContext)
+#        xmlconfig.file('configure.zcml', plone.app.contenttypes,
+#                       context=configurationContext)
         xmlconfig.file('configure.zcml', collective.tinymcetiles,
+                       context=configurationContext)
+        xmlconfig.file('configure.zcml', plone.app.contentlistingtile,
                        context=configurationContext)
         xmlconfig.string("""\
 <configure package="collective.tinymcetiles" xmlns="http://namespaces.plone.org/plone">
@@ -43,7 +54,9 @@ class TilesLayer(PloneSandboxLayer):
 """, context=configurationContext)
 
     def setUpPloneSite(self, portal):
+#        applyProfile(portal, 'plone.app.contenttypes:default')
         applyProfile(portal, 'collective.tinymcetiles:default')
+        applyProfile(portal, 'plone.app.contentlistingtile:default')
         #        applyProfile(portal, 'plone.app.texttile:default')
         registry = getUtility(IRegistry)
         registry["plone.app.tiles"].append('dummy.tile')

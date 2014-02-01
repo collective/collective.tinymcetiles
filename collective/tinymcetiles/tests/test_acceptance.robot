@@ -31,39 +31,61 @@ Del Boy opens a chippie using tiles
     Given a site owner
     click link  Home
     click add new
-    ${n} =  add pointy note  css=a.contenttype-document
+    show pointy note  css=a.contenttype-document
     ...    First he creates a new page
-    ...    position=left
-    sleep  ${SLEEP}
-    Remove element  ${n}
-    ${n} =  add pointy note  css=dl#plone-contentmenu-factories dd.actionMenuContent
+    show pointy note  css=dl#plone-contentmenu-factories dd.actionMenuContent
     ...    note the add new menu no longer includes folder or collection
-    ...    position=left
     add new page
     with the label  Title  input text  Menus
     with the label  Summary  input text  "only fools and chips" takeaway menu
     visual edit "We strive to make the best fish and chips your unemployment benefit can buy"
 
     #uploads a pic the shop.
-    upload image  http://londonist.com/wp-content/uploads/2012/02/fryerssign-587x500.png
+    upload image  http://images.smh.com.au/2012/01/20/2905552/MJtravelwide6_20120120132625161061-420x0.jpg
 
     click button  Save
 
-    #(note the pic goes into the page and the page appears as "menu" in the top nav.
-    # Note also display menu is gone)
+    #TODO remove
+    click link  Home
+
+    narrate "The image is stored in the page, no need to create a folder"
+    show pointy note  css=dl#plone-contentmenu-factories dd.actionMenuContent
+    ...    note the display menu is gone
 
     narrate "Now he needs to add his menu items"
-    click add new
-    add new page
-    with the label  Title  Fish
-    with the label  Summary  Cod dipped in fat
-    narrate "We just added a page within a page"
+    narrate "We can just add a page within a page"
     narrate "No fiddling with Folders or default page display settings"
 
-    uploads image of his fish (note fish image isn't appearing in side nav as its inside fish page)
-    goes back to menu page
-    Now we wants to list his menu. He clicks edit, adds "The chippie menu" sub title and then clicks "add tile" button.
-    he selects listingtile. (note by default its query already shows folder contents so no need to change). He selects summary view. Hits create.
+    click add new
+    add new page
+    with the label  Title  input text  Fish
+    with the label  Summary  input text  Cod dipped in fat
+
+    upload image  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
+    click button  Save
+    click link  Menus
+
+    narrate "Now we wants to list his menu"
+
+    click link  Edit
+    #adds "The chippie menu" sub title and then clicks "add tile" button.
+    narrate "Del is lazy so he wants an automated listing"
+
+ #   insert tile "Content listing"
+    show pointy note  css=.mce_plonetiles
+    ...   We can insert a tile to do this
+    Click link  css=.mce_plonetiles
+    select frame  css=.plonepopup iframe
+    ${n}=  label "Content listing"
+    show pointy note  ${n}  "Content listing tiles replaces collections"
+    with the label  Content listing  select checkbox
+    show pointy note  css=.criteria
+    ...     The default query lists the local context
+    ${n}=  label "Display mode"
+    show pointy note  ${n}  "He can choose how he wants it displayed"
+    select from list by label  ${n}  Summary view
+    click button  Create
+
     In the editor he sees a shortcode and a preview of what the listing will look like (hopefully)
     he clicks save and views the page which includes the fish, description and thumbnail of the fish image
     now he wants to extend his menu. he adds new page called "chips".
@@ -73,6 +95,15 @@ Del Boy opens a chippie using tiles
 
 
 *** Keywords ***
+
+show pointy note
+    [arguments]     ${locator}  ${note}
+    ${n} =  add pointy note  ${locator}
+    ...    ${note}
+    ...    position=left
+    sleep  ${SLEEP}
+    Remove element  ${n}
+
 
 click add new
     Click link  css=dl#plone-contentmenu-factories dt.actionMenuHeader a
@@ -96,7 +127,9 @@ upload image
     click link  upload
     choose file  id=uploadfile  ${file}
     click button  Upload
-    click button  OK
+    select from list by label  classes  Right
+    select from list by label  dimensions  Mini (200x200)
+    sleep   1s
     click button  OK
 
 
@@ -123,17 +156,20 @@ A new document
 When I insert a "DummyTile" in a document
   Go to  ${PLONE_URL}/a-document/edit
 #    Select Frame  pools_to_register_iframe
+  insert tile "Dummy tile"
+  # still editing in tinymce
+  click button  Save
+
+insert tile "${tile}"
   element should be visible  css=.mceLayout .mceToolbar
   Click link  css=.mce_plonetiles
-  page should contain  Dummy tile
+  page should contain  ${tile}
   select frame  css=.plonepopup iframe
 #  element should be visible  css=form#add-tile
-  with the label  Dummy tile  select checkbox
+  with the label  ${tile}  select checkbox
   click button  Create
 #  page should contain  img
 #  element should be visible css=img.mceTile
-  click button  Save
-  # still editing in tinymce
   click button  Save
 
 
@@ -146,9 +182,12 @@ A visitor can view "${text}"
 #  Page should contain  Test tile rendered
 
 
-
-
 With the label
     [arguments]     ${title}   ${extra_keyword}   @{list}
-    ${for}=  Get Element Attribute  xpath=//label[contains(., "${title}")]@for
+    ${for}=  label "${title}"
     Run Keyword     ${extra_keyword}  id=${for}   @{list}
+
+label "${title}"
+    [Return]  ${for}
+    ${for}=  Get Element Attribute  xpath=//label[contains(., "${title}")]@for
+

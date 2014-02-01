@@ -4,6 +4,7 @@ import robotsuite
 from plone.testing import layered
 from collective.tinymcetiles.testing import TILES_ROBOT_TESTING
 import urllib
+import os
 
 
 def test_suite():
@@ -20,4 +21,7 @@ class Keywords(object):
 
     def download_file(self, url):
         filename, headers = urllib.urlretrieve(url)
+        statinfo = os.stat(filename)
+        if statinfo.st_size == 0:
+            raise Exception("file download failed")
         return filename
