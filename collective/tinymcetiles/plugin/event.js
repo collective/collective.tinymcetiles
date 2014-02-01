@@ -27,13 +27,14 @@
                 // Check url
                 if (typeof(tiledata.url) !== 'undefined') {
 
+                    var shortcode = '[listing tile_id=' + tiledata.id + ' /]';
+
                     // Insert content
-                    editor.execCommand('mceInsertContent', false, editor.dom.createHTML('img', {
-                        src: '/++resource++collective.tinymcetiles.plugin/placeholder.gif',
-                        alt: tiledata.url,
-                        class: 'mceItem mceTile',
-                        border: 0
-                    }));
+                    editor.execCommand(
+                        'mceInsertContent',
+                        false,
+                        editor.dom.createHTML(
+                            'p', {class: 'mceItem mceTile'}, shortcode));
 
                     // Close popup
                     editor.windowManager.close(window);
