@@ -45,9 +45,6 @@ Del Boy opens a chippie using tiles
 
     click button  Save
 
-    #TODO remove
-    click link  Home
-
     narrate "The image is stored in the page, no need to create a folder"
     show pointy note  css=dl#plone-contentmenu-factories dd.actionMenuContent
     ...    note the display menu is gone
