@@ -41,10 +41,11 @@ Del Boy opens a chippie using tiles
     visual edit "We strive to make the best fish and chips your unemployment benefit can buy"
 
     #uploads a pic the shop.
-    #upload image  http://images.smh.com.au/2012/01/20/2905552/MJtravelwide6_20120120132625161061-420x0.jpg
+    upload image  http://images.smh.com.au/2012/01/20/2905552/MJtravelwide6_20120120132625161061-420x0.jpg
 
     click button  Save
-
+	Wait Until Page Contains  Item created
+	
     narrate "The image is stored in the page, no need to create a folder"
     show pointy note  css=dl#plone-contentmenu-factories dd.actionMenuContent
     ...    note the display menu is gone
@@ -58,8 +59,12 @@ Del Boy opens a chippie using tiles
     with the label  Title  input text  Fish
     with the label  Summary  input text  Cod dipped in fat
 
-    #upload image  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
+    upload image  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
+   
     click button  Save
+    
+    Wait Until Page Contains  Item created
+     
     click link  Menus
 
     narrate "Now we wants to list his menu"
@@ -77,8 +82,10 @@ Del Boy opens a chippie using tiles
     show pointy note  ${n}  "Content listing tiles replaces collections"
     with the label  Content listing  select checkbox
     click button  Create
-
     element should be visible  css=.criteria
+    #${m}=  value Title
+    #show pointy note  ${m}  "selecting fish as menu item" 
+    #select from list by Value  ${m}  Title
     show pointy note  css=.criteria
     ...     The default query lists the local context
     ${n}=  label "Display mode"
@@ -101,7 +108,7 @@ Del Boy opens a chippie using tiles
     add new page
     with the label  Title  input text  Chips
     with the label  Summary  input text  Potato dipped in fat
-    #upload image  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
+    upload image  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
     click button  Save
     click link  Menus
 
@@ -137,18 +144,19 @@ visual edit "${text}"
 
 upload image
     [arguments]     ${url}
-    click link  css=#text_image
+    click link  css=.mce_image
     select frame  css=.plonepopup iframe
-    #click link  External
-    #input text  css=#imageurl  ${url}
-    ${file}=  download file  ${url}
-    click link  upload
-    choose file  id=uploadfile  ${file}
-    click button  Upload
+    click link  External
+    input text  css=#imageurl  ${url}
+    #${file}=  download file  ${url}
+    #click link  upload
+    #choose file  id=uploadfile  ${file}
+    #click button  Upload
     select from list by label  classes  Right
-    select from list by label  dimensions  Mini (200x200)
+    #select from list by label  dimensions  Mini (200x200)
     sleep   1s
     click button  OK
+    
 
 
 Narrate "${text}"
