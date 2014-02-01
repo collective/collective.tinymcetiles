@@ -19,19 +19,19 @@ class IntegrationTestCase(unittest.TestCase):
 
     def test_dependencies_installed(self):
         qi = getToolByName(self.portal, 'portal_quickinstaller')
-        self.failUnless(qi.isProductInstalled('plone.app.blocks'))
-        self.failUnless(qi.isProductInstalled('plone.app.tiles'))
+        self.assertTrue(qi.isProductInstalled('plone.app.blocks'))
+        self.assertTrue(qi.isProductInstalled('plone.app.tiles'))
 
     def test_js_installed(self):
         pj = getToolByName(self.portal, 'portal_javascripts')
-        self.failUnless(
-            '++resource++collective.tinymcetiles.plugin/event.js' in pj.getResourceIds())
+        self.assertIn(
+            '++resource++collective.tinymcetiles.plugin/event.js', pj.getResourceIds())
 
     def test_tinymce_configured(self):
         tinymce = getUtility(ITinyMCE)
-        self.failUnless(
-            'plonetiles|/++resource++collective.tinymcetiles.plugin/editor_plugin.js' in tinymce.customplugins)
-        self.failUnless('plonetiles' in tinymce.customtoolbarbuttons)
+        self.assertIn(
+            'plonetiles|/++resource++collective.tinymcetiles.plugin/editor_plugin.js', tinymce.customplugins)
+        self.assertIn('plonetiles', tinymce.customtoolbarbuttons)
 
     def test_tile_rendering(self):
         self.portal.invokeFactory('Folder', 'test-folder')
@@ -58,9 +58,9 @@ class IntegrationTestCase(unittest.TestCase):
         browser.handleErrors = False
 
         browser.open(self.folder['d1'].absolute_url())
-        self.failUnless("Test tile rendered" in browser.contents)
-        self.failUnless("<p>With child tags</p>" in browser.contents)
-        self.failUnless("And tail text" in browser.contents)
+        self.assertIn("Test tile rendered", browser.contents)
+        self.assertIn("<p>With child tags</p>", browser.contents)
+        self.assertIn("And tail text", browser.contents)
 
 
 def test_suite():
