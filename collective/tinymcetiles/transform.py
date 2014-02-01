@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import logging
 from urlparse import urljoin
 from lxml.html import builder as E
