@@ -14,6 +14,11 @@ Test Teardown  Close all browsers
 ${SLEEP}  3.5s
 # to speed up: bin/robot -t "Del Boy opens a chippie using tiles" -v SLEEP:0s
 
+${CHIP_PIC}  http://3.bp.blogspot.com/-u1HS4kzoGuM/UfNzwLcl0BI/AAAAAAAAG0w/otZtiEHx72w/s1600/DSC_7515.jpg
+${FISH_PIC}  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
+${SHOP_PIC}  http://images.smh.com.au/2012/01/20/2905552/MJtravelwide6_20120120132625161061-420x0.jpg
+
+
 *** Test Cases ***
 
 Scenario: As an editor I can inset a "DummyTile" in a document
@@ -39,10 +44,7 @@ Del Boy opens a chippie using tiles
     with the label  Title  input text  Menus
     with the label  Summary  input text  "only fools and chips" takeaway menu
     visual edit "We strive to make the best fish and chips your unemployment benefit can buy"
-
-    #uploads a pic the shop.
-    upload image  http://images.smh.com.au/2012/01/20/2905552/MJtravelwide6_20120120132625161061-420x0.jpg
-
+    upload image   ${SHOP_PIC}
     click button  Save
 	Wait Until Page Contains  Item created
 	
@@ -58,9 +60,7 @@ Del Boy opens a chippie using tiles
     add new page
     with the label  Title  input text  Fish
     with the label  Summary  input text  Cod dipped in fat
-
-    upload image  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
-   
+    upload image  ${FISH_PIC}
     click button  Save
     
     Wait Until Page Contains  Item created
@@ -108,7 +108,7 @@ Del Boy opens a chippie using tiles
     add new page
     with the label  Title  input text  Chips
     with the label  Summary  input text  Potato dipped in fat
-    upload image  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
+    upload image  ${CHIP_PIC}
     click button  Save
     click link  Menus
 
@@ -146,15 +146,17 @@ upload image
     [arguments]     ${url}
     click link  css=.mce_image
     select frame  css=.plonepopup iframe
-    click link  External
-    input text  css=#imageurl  ${url}
-    #${file}=  download file  ${url}
-    #click link  upload
-    #choose file  id=uploadfile  ${file}
-    #click button  Upload
+    # external images doesn't help our demo of showing containment
+    #click link  External
+    #input text  css=#imageurl  ${url}
+    ${file}=  download file  ${url}
+    click link  upload
+    choose file  id=uploadfile  ${file}
+    click button  Upload
     select from list by label  classes  Right
-    #select from list by label  dimensions  Mini (200x200)
-    sleep   1s
+    select from list by label  dimensions  Mini (200x200)
+    #sleep   1s
+    Wait Until Keyword Succeeds  10s  0.5s  Element Should Be Enabled  css=input#insert-selection
     click button  OK
     
 
