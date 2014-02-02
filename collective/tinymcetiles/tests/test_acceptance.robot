@@ -38,8 +38,10 @@ Del Boy opens a chippie using tiles
     click add new
     show pointy note  css=a.contenttype-document
     ...    First he creates a new page
+    ...    left
     show pointy note  css=dl#plone-contentmenu-factories dd.actionMenuContent
     ...    note the add new menu no longer includes folder or collection
+    ...    left
     add new page
     with the label  Title  input text  Menus
     with the label  Summary  input text  "only fools and chips" takeaway menu
@@ -53,6 +55,7 @@ Del Boy opens a chippie using tiles
     narrate "The image is stored in the page, no need to create a folder"
     show pointy note  css=dl#plone-contentmenu-factories dd.actionMenuContent
     ...    note the display menu is gone
+    ...    left
 
     narrate "Now he needs to add his menu items"
     narrate "We can just add a page within a page"
@@ -64,24 +67,26 @@ Del Boy opens a chippie using tiles
     with the label  Summary  input text  Cod dipped in fat
     upload image  ${FISH_PIC}
     click button  Save
-    
     Wait Until Page Contains  Item created
-     
-    click link  Menus
 
+    click link  Menus
     narrate "Now we wants to list his menu"
 
     click link  Edit
-    #adds "The chippie menu" sub title and then clicks "add tile" button.
     narrate "Del is lazy so he wants an automated listing"
 
+
+    #TODO insert a heading test, make into heading
+    #TODO insert tile after the text
  #   insert tile "Content listing"
     show pointy note  css=.mce_plonetiles
     ...   We can insert a tile to do this
+    ...   top
     Click link  css=.mce_plonetiles
     select frame  css=.plonepopup iframe
     ${n}=  label "Content listing"
     show pointy note  ${n}  "Content listing tiles replaces collections"
+    ...   top
     with the label  Content listing  select checkbox
     click button  Create
     element should be visible  css=.criteria
@@ -90,15 +95,17 @@ Del Boy opens a chippie using tiles
     #select from list by Value  ${m}  Title
     show pointy note  css=.criteria
     ...     The default query lists the local context
+    ...     top
     ${n}=  label "Display mode"
     show pointy note  ${n}  "He can choose how he wants it displayed"
+    ...  top
     select from list by label  ${n}  Summary view
     click button  Save
 
-    #TODO
-    #In the editor he sees a shortcode and a preview of what the listing will look like (hopefully)
+    #TODO point to shortcode in editor and a preview of what the listing will look like (hopefully)
     narrate "The tile is inserted as a shortcode"
     narrate "including a preview of what the listing will look like"
+    #TODO make review work with shortcodes
 
     click button  Save
     narrate "He now has a page his fish automatically listed"
@@ -124,10 +131,10 @@ Del Boy opens a chippie using tiles
 *** Keywords ***
 
 show pointy note
-    [arguments]     ${locator}  ${note}
+    [arguments]     ${locator}  ${note}  ${position}
     ${n} =  add pointy note  ${locator}
     ...    ${note}
-    ...    position=left
+    ...    position=${position}
     sleep  ${SLEEP}
     Remove element  ${n}
 
@@ -164,8 +171,10 @@ upload image
 
 
 Narrate "${text}"
+    #TODO: need to make this bigger, on nice grey transparent background
     ${note1} =  Add note  css=body
     ...  ${text}
+    #TODO: work out delay based on number of words
     sleep  ${SLEEP}
     Remove element  ${note1}
 
