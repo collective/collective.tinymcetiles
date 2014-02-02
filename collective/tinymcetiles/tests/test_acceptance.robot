@@ -11,8 +11,8 @@ Test Setup  Open test browser
 Test Teardown  Close all browsers
 
 *** Variables ***
-${SLEEP}  3.5s
-# to speed up: bin/robot -t "Del Boy opens a chippie using tiles" -v SLEEP:0s
+${SLEEP}  0s
+# to slow down: bin/robot -t "Del Boy opens a chippie using tiles" -v SLEEP:3.5s
 
 ${CHIP_PIC}  http://3.bp.blogspot.com/-u1HS4kzoGuM/UfNzwLcl0BI/AAAAAAAAG0w/otZtiEHx72w/s1600/DSC_7515.jpg
 ${FISH_PIC}  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
@@ -48,6 +48,8 @@ Del Boy opens a chippie using tiles
     click button  Save
 	Wait Until Page Contains  Item created
 	
+    # TODO: need to ensure images are stored inside pages and can't see objects
+    #page should not contain  jpg
     narrate "The image is stored in the page, no need to create a folder"
     show pointy note  css=dl#plone-contentmenu-factories dd.actionMenuContent
     ...    note the display menu is gone

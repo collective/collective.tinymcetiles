@@ -47,7 +47,7 @@ class IntegrationTestCase(unittest.TestCase):
         self.folder.invokeFactory('Document', 'd1')
         d1 = self.folder.get('d1')
         d1.setTitle(u'New title')
-        d1.text = RichTextValue(raw="""\
+        d1.text = RichTextValue(u"""\
 <p>
     <img
         src="/++resource++collective.tinymcetiles.plugin/placeholder.gif"
@@ -55,7 +55,7 @@ class IntegrationTestCase(unittest.TestCase):
         class="mceItem mceTile"
         />
 </p>
-""", mimeType='text/html')
+""", 'text/html', 'text/x-html-safe', 'utf-8')
 
         transaction.commit()
 
