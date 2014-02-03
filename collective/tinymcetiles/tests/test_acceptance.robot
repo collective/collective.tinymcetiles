@@ -36,26 +36,19 @@ Del Boy opens a chippie using tiles
     Given a site owner
     click link  Home
     click add new
-    show pointy note  css=a.contenttype-document
-    ...    First he creates a new page
-    ...    left
-    show pointy note  css=dl#plone-contentmenu-factories dd.actionMenuContent
-    ...    note the add new menu no longer includes folder or collection
-    ...    left
+    show pointy note on "Add New > Page" "First he creates a new page"
+    show pointy note on "Add New dropdown" "note the add new menu no longer includes folder or collection"
     add new page
     with the label  Title  input text  Menus
     with the label  Summary  input text  "only fools and chips" takeaway menu
     visual edit "We strive to make the best fish and chips your unemployment benefit can buy"
     upload image   ${SHOP_PIC}
-    click button  Save
-	Wait Until Page Contains  Item created
-	
+    Save Page
+
     # TODO: need to ensure images are stored inside pages and can't see objects
     #page should not contain  jpg
     narrate "The image is stored in the page, no need to create a folder"
-    show pointy note  css=dl#plone-contentmenu-factories dd.actionMenuContent
-    ...    note the display menu is gone
-    ...    left
+    show pointy note on "Add New dropdown" "note the display menu is gone"
 
     narrate "Now he needs to add his menu items"
     narrate "We can just add a page within a page"
@@ -66,8 +59,7 @@ Del Boy opens a chippie using tiles
     with the label  Title  input text  Fish
     with the label  Summary  input text  Cod dipped in fat
     upload image  ${FISH_PIC}
-    click button  Save
-    Wait Until Page Contains  Item created
+    Save Page
 
     click link  Menus
     narrate "Now we wants to list his menu"
@@ -75,31 +67,17 @@ Del Boy opens a chippie using tiles
     click link  Edit
     narrate "Del is lazy so he wants an automated listing"
 
-
     #TODO insert a heading test, make into heading
     #TODO insert tile after the text
- #   insert tile "Content listing"
-    show pointy note  css=.mce_plonetiles
-    ...   We can insert a tile to do this
-    ...   top
-    Click link  css=.mce_plonetiles
-    select frame  css=.plonepopup iframe
-    ${n}=  label "Content listing"
-    show pointy note  ${n}  "Content listing tiles replaces collections"
-    ...   top
+    show pointy note on "Insert tile button" "We can insert a tile to do this"
+    Click Button Insert Tile
+    Use Dialog "Add Tile"
+    Show pointy note on "Tile Type > Content Listing" "Content listing tiles replaces collections"
     with the label  Content listing  select checkbox
     click button  Create
-    element should be visible  css=.criteria
-    #${m}=  value Title
-    #show pointy note  ${m}  "selecting fish as menu item" 
-    #select from list by Value  ${m}  Title
-    show pointy note  css=.criteria
-    ...     The default query lists the local context
-    ...     top
-    ${n}=  label "Display mode"
-    show pointy note  ${n}  "He can choose how he wants it displayed"
-    ...  top
-    select from list by label  ${n}  Summary view
+    Show pointy note on "Content Listing > Criteria" "The default query lists the local context"
+    Show pointy note on "Content Listing > Display Mode" "He can choose how he wants it displayed"
+    Select "Content Listing > Display Mode" "Summary View"
     click button  Save
 
     #TODO point to shortcode in editor and a preview of what the listing will look like (hopefully)
@@ -129,6 +107,51 @@ Del Boy opens a chippie using tiles
 
 
 *** Keywords ***
+
+Save Page
+    click button  Save
+	Wait Until Page Contains  Item created
+
+
+show pointy note on "Add New > Page" "${note}"
+    show pointy note  css=a.contenttype-document  ${note}  left
+
+show pointy note on "Add New dropdown" "${note}"
+    show pointy note  css=dl#plone-contentmenu-factories dd.actionMenuContent
+    ...    ${note}
+    ...    left
+
+show pointy note on "Insert tile button" "${note}"
+    show pointy note  css=.mce_plonetiles
+    ...   ${note}
+    ...   top
+
+Click Button Insert Tile
+    Click Link  css=.mce_plonetiles
+
+Use Dialog "Add Tile"
+    select frame  css=.plonepopup iframe
+
+Show pointy note on "Tile Type > Content Listing" "${note}"
+    ${n}=  label "Content listing"
+    show pointy note  ${n}  ${note}
+    ...   top
+
+Show pointy note on "Content Listing > Criteria" "${note}"
+    element should be visible  css=.criteria
+    show pointy note  css=.criteria
+    ...     ${note}
+    ...     top
+
+Show pointy note on "Content Listing > Display Mode" "${note}"
+    ${n}=  label "Display mode"
+    show pointy note  ${n}
+    ...  ${note}
+    ...  top
+
+Select "Content Listing > Display Mode" "${value}"
+    ${n}=  label "Display mode"
+    select from list by label  ${n}  ${value}
 
 show pointy note
     [arguments]     ${locator}  ${note}  ${position}
