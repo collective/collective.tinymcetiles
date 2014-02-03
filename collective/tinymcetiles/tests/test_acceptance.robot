@@ -49,6 +49,7 @@ Del Boy opens a chippie using tiles
     #page should not contain  jpg
     narrate "The image is stored in the page, no need to create a folder"
     show pointy note on "Add New dropdown" "note the display menu is gone"
+    #TODO need to get rid of the display menu
 
     narrate "Now he needs to add his menu items"
     narrate "We can just add a page within a page"
@@ -85,10 +86,11 @@ Del Boy opens a chippie using tiles
     narrate "including a preview of what the listing will look like"
     #TODO need to switch to actual using shortcodes instead of image placeholders
     #TODO point to shortcode in editor and a preview of what the listing will look like (hopefully)
-    #TODO make review work with shortcodes
+    #TODO make preview work with shortcodes
 
     click button  Save
-    narrate "He now has a page his fish automatically listed"
+    narrate "not only has he automated his menu, but with content above and below it, it's more flexible than using collections"
+    #TODO need to insert text above and below to make the above true.
     page should contain  Cod dipped in fat
     #TODO make listingview include thumbnail?
 
@@ -104,6 +106,10 @@ Del Boy opens a chippie using tiles
     narrate "Chips have automatically been added to the menu"
     page should contain  Potato dipped in fat
     #TODO point at chip item instead of just narrate
+
+    #TODO should show reediting an existing tile
+    #TODO should show manualy editing an existing tile, or just inserting a tile by hand
+
 
 
 *** Keywords ***
