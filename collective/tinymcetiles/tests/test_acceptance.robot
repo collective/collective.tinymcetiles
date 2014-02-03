@@ -35,10 +35,10 @@ Del Boy opens a chippie using tiles
     narrate "He logs in"
     Given a site owner
     click link  Home
-    click add new
+    Click "Add New"
     show pointy note on "Add New > Page" "First he creates a new page"
     show pointy note on "Add New dropdown" "note the add new menu no longer includes folder or collection"
-    add new page
+    Click "Add New > Page"
     with the label  Title  input text  Menus
     with the label  Summary  input text  "only fools and chips" takeaway menu
     visual edit "We strive to make the best fish and chips your unemployment benefit can buy"
@@ -54,8 +54,8 @@ Del Boy opens a chippie using tiles
     narrate "We can just add a page within a page"
     narrate "No fiddling with Folders or default page display settings"
 
-    click add new
-    add new page
+    Click "Add New"
+    Click "Add New > Page"
     with the label  Title  input text  Fish
     with the label  Summary  input text  Cod dipped in fat
     upload image  ${FISH_PIC}
@@ -64,46 +64,46 @@ Del Boy opens a chippie using tiles
     click link  Menus
     narrate "Now we wants to list his menu"
 
-    click link  Edit
     narrate "Del is lazy so he wants an automated listing"
-
-    #TODO insert a heading test, make into heading
-    #TODO insert tile after the text
-    show pointy note on "Insert tile button" "We can insert a tile to do this"
+    narrate "previous he'd have to use collections and default pages which was both confusing and inflexible"
+    click link  Edit
+    show pointy note on "Insert tile button" "Instead we're going to use a 'tile'"
     Click Button Insert Tile
+    #TODO insert a heading text, make into heading and then insert the tile after the heading
+
     Use Dialog "Add Tile"
     Show pointy note on "Tile Type > Content Listing" "Content listing tiles replaces collections"
     with the label  Content listing  select checkbox
     click button  Create
-    Show pointy note on "Content Listing > Criteria" "The default query lists the local context"
+    Show pointy note on "Content Listing > Criteria" "The default query lists the sub items within the current page"
+    #TODO we need to restrict it to pages so the shop image isn't listed
     Show pointy note on "Content Listing > Display Mode" "He can choose how he wants it displayed"
     Select "Content Listing > Display Mode" "Summary View"
     click button  Save
 
-    #TODO point to shortcode in editor and a preview of what the listing will look like (hopefully)
     narrate "The tile is inserted as a shortcode"
     narrate "including a preview of what the listing will look like"
+    #TODO need to switch to actual using shortcodes instead of image placeholders
+    #TODO point to shortcode in editor and a preview of what the listing will look like (hopefully)
     #TODO make review work with shortcodes
 
     click button  Save
     narrate "He now has a page his fish automatically listed"
-    #TODO make listingview include thumbnail?
     page should contain  Cod dipped in fat
+    #TODO make listingview include thumbnail?
 
     narrate "Now he wants to extend is menu by adding Chips"
-    click add new
-    add new page
+    Click "Add New"
+    Click "Add New > Page"
     with the label  Title  input text  Chips
     with the label  Summary  input text  Potato dipped in fat
     upload image  ${CHIP_PIC}
     click button  Save
     click link  Menus
 
-    #TODO point at chip item
     narrate "Chips have automatically been added to the menu"
     page should contain  Potato dipped in fat
-
-
+    #TODO point at chip item instead of just narrate
 
 
 *** Keywords ***
@@ -162,10 +162,10 @@ show pointy note
     Remove element  ${n}
 
 
-click add new
+Click "Add New"
     Click link  css=dl#plone-contentmenu-factories dt.actionMenuHeader a
 
-add new page
+Click "Add New > Page"
     Click link  css=a#document
 
 visual edit "${text}"
