@@ -5,6 +5,7 @@ from plone.testing import layered
 from collective.tinymcetiles.testing import TILES_ROBOT_TESTING
 import urllib
 import os
+from robot.libraries.BuiltIn import BuiltIn
 
 
 def test_suite():
@@ -25,3 +26,8 @@ class Keywords(object):
         if statinfo.st_size == 0:
             raise Exception('file download failed')
         return filename
+
+    def wait_for_speech(self, words, perword):
+        count = len(words.split())
+        secs = count*float(perword) + 2*float(perword)
+        BuiltIn().sleep("%fs" % secs)

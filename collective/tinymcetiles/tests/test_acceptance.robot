@@ -2,6 +2,7 @@
 
 Resource  plone/app/robotframework/selenium.robot
 Resource  plone/app/robotframework/keywords.robot
+Resource  plone/app/robotframework/speak.robot
 Resource  Selenium2Screenshots/keywords.robot
 Library   collective.tinymcetiles.tests.test_acceptance.Keywords
 
@@ -11,8 +12,8 @@ Test Setup  Open test browser
 Test Teardown  Close all browsers
 
 *** Variables ***
-${SLEEP}  0s
-# to slow down: bin/robot -t "Del Boy opens a chippie using tiles" -v SLEEP:3.5s
+${SLEEP}  0.4
+# to speed up: bin/robot -t "Del Boy opens a chippie using tiles" -v SLEEP:0
 
 ${CHIP_PIC}  http://3.bp.blogspot.com/-u1HS4kzoGuM/UfNzwLcl0BI/AAAAAAAAG0w/otZtiEHx72w/s1600/DSC_7515.jpg
 ${FISH_PIC}  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
@@ -31,41 +32,49 @@ Del Boy opens a chippie using tiles
     narrate "Del Boy has a great idea to open a fish and chip shop"
     narrate "Now he needs a website"
     narrate "Luckily his friend rodney got him this great Plone site"
-    narrate "Now he can put is food menu online in no time!"
-    narrate "He logs in"
     Given a site owner
+    narrate "Now he can put is food menu online in no time!"
     click link  Home
     Click "Add New"
     show pointy note on "Add New > Page" "First he creates a new page"
-    show pointy note on "Add New dropdown" "note the add new menu no longer includes folder or collection"
     Click "Add New > Page"
     with the label  Title  input text  Menus
     with the label  Summary  input text  "only fools and chips" takeaway menu
+    show pointy note on "Visual Editor" "Content still works the same way"
     visual edit "We strive to make the best fish and chips your unemployment benefit can buy"
+    Save Page
+    Click Link  Edit
     upload image   ${SHOP_PIC}
     Save Page
 
     # TODO: need to ensure images are stored inside pages and can't see objects
-    #page should not contain  jpg
-    narrate "The image is stored in the page, no need to create a folder"
-    show pointy note on "Add New dropdown" "note the display menu is gone"
-    #TODO need to get rid of the display menu
+    page should not contain  jpg
+    show pointy note on "Content Image" "The image we just uploaded..."
+    Click link  Contents
+    show pointy note on "Contents Item" "...is stored in the page"
+    show pointy note on "Breadcrumbs" "so no need to create a folder"
+    Click "Add New"
+    show pointy note on "Add New dropdown" "in fact we no longer have folder or collection types"
 
     narrate "Now he needs to add his menu items"
-    narrate "We can just add a page within a page"
-    narrate "No fiddling with Folders or default page display settings"
 
-    Click "Add New"
+    show pointy note on "Add New > Page" "Adding a page now adds a sub-page"
     Click "Add New > Page"
     with the label  Title  input text  Fish
     with the label  Summary  input text  Cod dipped in fat
+    show pointy note on "Breadcrumbs" "No fiddling with Folders"
+    show pointy note on "Breadcrumbs" "or default page display settings"
+    Save Page
+    Click Link  Edit
     upload image  ${FISH_PIC}
     Save Page
+    show pointy note on "Add New dropdown" "there isn't even a display any anymore"
+    #TODO need to get rid of the display menu
 
     click link  Menus
     narrate "Now we wants to list his menu"
 
-    narrate "Del is lazy so he wants an automated listing"
+    narrate "Del is lazy so he wants an automated the listing of his menu items"
     narrate "previous he'd have to use collections and default pages which was both confusing and inflexible"
     click link  Edit
     show pointy note on "Insert tile button" "Instead we're going to use a 'tile'"
@@ -76,7 +85,7 @@ Del Boy opens a chippie using tiles
     Show pointy note on "Tile Type > Content Listing" "Content listing tiles replaces collections"
     with the label  Content listing  select checkbox
     click button  Create
-    Show pointy note on "Content Listing > Criteria" "The default query lists the sub items within the current page"
+    Show pointy note on "Content Listing > Criteria" "by default we list current contents just like a folder view would have"
     #TODO we need to restrict it to pages so the shop image isn't listed
     Show pointy note on "Content Listing > Display Mode" "He can choose how he wants it displayed"
     Select "Content Listing > Display Mode" "Summary View"
@@ -92,13 +101,15 @@ Del Boy opens a chippie using tiles
     narrate "not only has he automated his menu, but with content above and below it, it's more flexible than using collections"
     #TODO need to insert text above and below to make the above true.
     page should contain  Cod dipped in fat
-    #TODO make listingview include thumbnail?
+    #TODO make contentlisting tile include thumbnail?
 
     narrate "Now he wants to extend is menu by adding Chips"
     Click "Add New"
     Click "Add New > Page"
     with the label  Title  input text  Chips
     with the label  Summary  input text  Potato dipped in fat
+    click button  Save
+    click link    Edit
     upload image  ${CHIP_PIC}
     click button  Save
     click link  Menus
@@ -107,8 +118,14 @@ Del Boy opens a chippie using tiles
     page should contain  Potato dipped in fat
     #TODO point at chip item instead of just narrate
 
+
+
     #TODO should show reediting an existing tile
+
     #TODO should show manualy editing an existing tile, or just inserting a tile by hand
+
+    #TODO show adding tile into a static text portlet to show how tiles can replace portlets
+    # e.g. no more collection portlet, news portlet or upcoming events portlets
 
 
 
@@ -116,7 +133,7 @@ Del Boy opens a chippie using tiles
 
 Save Page
     click button  Save
-	Wait Until Page Contains  Item created
+#	Wait Until Page Contains  Item created
 
 
 show pointy note on "Add New > Page" "${note}"
@@ -127,8 +144,34 @@ show pointy note on "Add New dropdown" "${note}"
     ...    ${note}
     ...    left
 
+show pointy note on "Breadcrumbs" "${note}"
+    show pointy note  css=#portal-breadcrumbs
+    ...    ${note}
+    ...    bottom
+
+
 show pointy note on "Insert tile button" "${note}"
     show pointy note  css=.mce_plonetiles
+    ...   ${note}
+    ...   top
+
+show pointy note on "Menus" "${note}"
+    show pointy note  css=#portaltab-menus
+    ...   ${note}
+    ...   top
+
+show pointy note on "Visual Editor" "${note}"
+    show pointy note  css=#formfield-form-widgets-text
+    ...   ${note}
+    ...   top
+
+show pointy note on "Contents Item" "${note}"
+    show pointy note  css=.draggable
+    ...   ${note}
+    ...   top
+
+show pointy note on "Content Image" "${note}"
+    show pointy note  css=#content img
     ...   ${note}
     ...   top
 
@@ -157,16 +200,40 @@ Show pointy note on "Content Listing > Display Mode" "${note}"
 
 Select "Content Listing > Display Mode" "${value}"
     ${n}=  label "Display mode"
+#    scroll Component To View  ${n}
     select from list by label  ${n}  ${value}
 
 show pointy note
     [arguments]     ${locator}  ${note}  ${position}
+    Update element style  ${locator}  outline  3px dotted red
     ${n} =  add pointy note  ${locator}
     ...    ${note}
     ...    position=${position}
-    sleep  ${SLEEP}
+    ...   width=300  background=rgba(200,200,200,1)  border=3px solid black
+    Update element style  ${n}  font  15px arial,sans-serif
+    Update element style  ${n}  text-align  center
+    Update element style  ${n}  border-radius  5px
+    Update element style  ${n}  box-shadow  10px 10px 5px #888888
+    Speak  ${note}
+    wait for speech  ${note}  ${SLEEP}
     Remove element  ${n}
+    Update element style  ${locator}  outline  0px
 
+
+Narrate "${text}"
+    #TODO: need to make this bigger, on nice grey transparent background
+    ${note1} =  Add note  css=#content
+    ...  ${text}
+    ...   width=500  background=rgba(200,200,200,0.7)  position=bottom  border=3px solid black
+    Update element style  ${note1}  font  25px arial,sans-serif
+    Update element style  ${note1}  text-align  center
+    Update element style  ${note1}  border-radius  15px
+    Update element style  ${note1}  box-shadow  10px 10px 5px #888888
+
+    #TODO: work out delay based on number of words
+    Speak  ${text}
+    wait for speech  ${text}  ${SLEEP}
+    Remove element  ${note1}
 
 Click "Add New"
     Click link  css=dl#plone-contentmenu-factories dt.actionMenuHeader a
@@ -198,14 +265,6 @@ upload image
     click button  OK
     
 
-
-Narrate "${text}"
-    #TODO: need to make this bigger, on nice grey transparent background
-    ${note1} =  Add note  css=body
-    ...  ${text}
-    #TODO: work out delay based on number of words
-    sleep  ${SLEEP}
-    Remove element  ${note1}
 
 # Given
 

@@ -16,7 +16,7 @@ import collective.tinymcetiles
 import plone.app.contentlistingtile
 import plone.app.contenttypes
 import plone.app.event
-
+from plone.app.robotframework.testing import SPEAKJS_FIXTURE
 
 class DummyTile(Tile):
     def __call__(self):
@@ -96,6 +96,7 @@ TILES_FUNCTIONAL_TESTING = FunctionalTesting(
 TILES_ROBOT_TESTING = FunctionalTesting(
     bases=(TILES_FIXTURE,
            REMOTE_LIBRARY_BUNDLE_FIXTURE,
+           SPEAKJS_FIXTURE,
            ZSERVER_FIXTURE),
     name='collective.tinymcetiles:Robot')
 
