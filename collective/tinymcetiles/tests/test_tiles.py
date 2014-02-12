@@ -1,4 +1,9 @@
-from plone.app.testing import setRoles, TEST_USER_ID, TEST_USER_NAME, login
+# -*- coding: utf-8 -*-
+from plone.app.testing import setRoles
+from plone.app.testing import TEST_USER_ID
+from plone.app.testing import TEST_USER_NAME
+from plone.app.testing import login
+from plone.app.textfield import RichTextValue
 import transaction
 import unittest2 as unittest
 from zope.component import getUtility
@@ -19,8 +24,8 @@ class IntegrationTestCase(unittest.TestCase):
 
     def test_dependencies_installed(self):
         qi = getToolByName(self.portal, 'portal_quickinstaller')
-        self.failUnless(qi.isProductInstalled('plone.app.blocks'))
-        self.failUnless(qi.isProductInstalled('plone.app.tiles'))
+        self.assertTrue(qi.isProductInstalled('plone.app.blocks'))
+        self.assertTrue(qi.isProductInstalled('plone.app.tiles'))
 
     def test_js_installed(self):
         pj = getToolByName(self.portal, 'portal_javascripts')
@@ -34,7 +39,10 @@ class IntegrationTestCase(unittest.TestCase):
         self.assertIn('plonetiles', tinymce.customtoolbarbuttons)
 
     def test_tile_rendering(self):
-        self.portal.invokeFactory('Folder', 'test-folder')
+        try:
+            self.portal.invokeFactory('Folder', 'test-folder')
+        except:
+            self.portal.invokeFactory('Document', 'test-folder')
         self.folder = self.portal['test-folder']
         self.folder.invokeFactory('Document', 'd1')
         self.folder['d1'].setTitle(u"New title")
@@ -42,8 +50,6 @@ class IntegrationTestCase(unittest.TestCase):
         self.folder['d1'].getField('text').setContentType(self.folder['d1'],
                                                           "text/html")
 
-        #        pw = getToolByName(self.portal, 'portal_workflow')
-        #        pw.doActionFor(self.folder['d1'], 'publish')
         transaction.commit()
 
         browser = Browser(self.portal)
