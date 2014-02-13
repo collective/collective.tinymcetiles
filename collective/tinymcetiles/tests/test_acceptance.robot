@@ -87,12 +87,19 @@ Del Boy opens a chippie using tiles
     click button  Create
     Show pointy note on "Content Listing > Criteria" "by default we list current contents just like a folder view would have"
     #TODO we need to restrict it to pages so the shop image isn't listed
-    Show pointy note on "Content Listing > Display Mode" "He can choose how he wants it displayed"
-    Select "Content Listing > Display Mode" "Summary View"
+    #TODO: display view is off the page so we can't select it. Need to make box bigger or work out how to scroll
+    #TODO: should make summary view defaul anyway
+    #Show pointy note on "Content Listing > Display Mode" "He can choose how he wants it displayed"
+    #Select "Content Listing > Display Mode" "Summary View"
     click button  Save
 
     narrate "The tile is inserted as a shortcode"
-    narrate "including a preview of what the listing will look like"
+    narrate "A shortcode is a technique made popular with wordpress"
+    narrate "It allows you to insert the same content or functionality over and over, whereever you want in the page"
+    narrate "Plone tiles are our short codes. The format allow for the tile url, includeing type and id if it's persistent"
+    narrate "followed by parameters. In betten the square brackets could be a single rich text parameter"
+    narrate "or for the listing tile, it's used to show a preview of what the listing might render as"
+    narrate "once rendered the preview is thrown away and the shortcode replaced by the html the tile renders"
     #TODO need to switch to actual using shortcodes instead of image placeholders
     #TODO point to shortcode in editor and a preview of what the listing will look like (hopefully)
     #TODO make preview work with shortcodes
