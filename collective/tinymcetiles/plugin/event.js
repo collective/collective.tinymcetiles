@@ -1,4 +1,9 @@
-;
+if (typeof String.prototype.startsWith != 'function') {
+  // see below for better implementation!
+  String.prototype.startsWith = function (str){
+    return this.indexOf(str) == 0;
+  };
+}
 (function ($) {
 
     // Init on load
@@ -26,18 +31,30 @@
 
                 // Check url
                 if (typeof(tiledata.url) !== 'undefined') {
+                    var name = tiledata.url;
+                    if  (name.startsWith('./@@')) {
+                        name = name.substring(4);
+                    }
 
-                    var shortcode = '[listing tile_id=' + tiledata.id + ' /]';
 
-                    // Insert content
-                    editor.execCommand(
-                        'mceInsertContent',
-                        false,
-                        editor.dom.createHTML(
-                            'p', {class: 'mceItem mceTile'}, shortcode));
+                    $.ajax({
+                        url: tiledata.url,
+                        success: function(response) {
+                            var shortcode = '[' + name + ']';
+                            shortcode += response;
+                            shortcode += '[/' + name + ']';
+                            // Insert content
+                            editor.execCommand(
+                                'mceInsertContent',
+                                false,
+                                editor.dom.createHTML(
+                                    'p', {class: 'mceItem mceTile'}, shortcode));
+                            // Close popup
+                            editor.windowManager.close(window);
+                        }
+                    });
 
-                    // Close popup
-                    editor.windowManager.close(window);
+
                 }
             }
         }

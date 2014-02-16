@@ -4,6 +4,7 @@ from plone.app.blocks import utils
 from repoze.xmliter.serializer import XMLSerializer
 from urlparse import urljoin
 from zope.interface import implements
+from lxml import etree
 
 import logging
 import re
@@ -24,7 +25,7 @@ SHORTCODE_TO_TILE_MAPPING = {
 SHORTCODE_REGEXP = re.compile(
     r'\['  # Opening bracket
     r'(?P<escapeopen>\[?)'  # 1: Optional second opening bracket for escaping snippets: [[tag]]
-    r'(?P<name>[/\w\d\_\.-]+)'  # 2: Snippet name
+    r'(?P<name>[/\w\d\_\.-@]+)'  # 2: Snippet name
     r'\b'  # Word boundary
     r'(?P<arguments>'  # 3: Unroll the loop: Inside the opening snippet tag
     r'[^\]\/]*'  # Not a closing bracket or forward slash
@@ -80,7 +81,14 @@ class ShortcodesTransform(object):
         elements = result.tree.xpath("//*[contains(text(),'[')]")
         tree = result.tree
         for element in elements:
-            tree = self._resolve_tile(tree, element)
+            #first see if we can find two matches at the same level
+            shortcode_nodes = [element]
+            for next in element.itersiblings():
+                shortcode_nodes.append(next)
+                if next in elements:
+                    self._resolve_tile(tree, shortcode_nodes)
+
+            #tree = self._resolve_tile(tree, element)
 
         if tree is None:
             return None
@@ -93,12 +101,20 @@ class ShortcodesTransform(object):
 
         return result
 
-    def _resolve_tile(self, tree=None, element=None):
+    def _resolve_tile(self, tree=None, elements=[]):
         """Try to resolve the tile and merge it into the tree."""
 
         root = tree.getroot()
         head_node = root.find('head')
-        tile_tree = self._get_tile_tree(element.text)
+        if elements is []:
+            return root
+        # due to how tinymce inserts things. our shortcode is likely something like
+        # <p>[code]</p><div/><p>[/code]</p>
+        first = elements[0]
+        text = first.text
+        text += ''.join([etree.tostring(n) for n in elements[1:-2]])
+        text += elements[-1].text
+        tile_tree, pre, post = self._get_tile_tree(text)
 
         if tile_tree is None:
             return tree
@@ -113,22 +129,32 @@ class ShortcodesTransform(object):
         # XXX: this should be done differently probably
         tile_body = tile_tree.find('body')
         if tile_body is not None:
-            element.text = tile_body.text
+            # insert nodes before out matched nodes
 
-        # insert tile target with tile body
-        tileBody = tile_tree.find('body')
-        if tileBody is not None:
-
+            # insert tile target with tile body
+            tileBody = tile_tree.find('body')
             # Preserve text
+            if pre:
+                n=E.SPAN()
+                n.text = pre
+                first.addprevious(n)
             if tileBody.text:
                 tileTextSpan = E.SPAN()
                 tileTextSpan.text = tileBody.text
-                element.addnext(tileTextSpan)
+                first.addprevious(tileTextSpan)
 
             # Copy other nodes
             for tileBodyChild in tileBody:
-                element.addnext(tileBodyChild)
+                first.addprevious(tileBodyChild)
+            if post:
+                n=E.SPAN()
+                n.text = post
+                first.addprevious(n)
 
+            # remove the matched nodes
+            parent = first.getparent()
+            for child in elements:
+                parent.remove(child)
         return tree
 
     def _get_tile_tree(self, text):
@@ -138,12 +164,15 @@ class ShortcodesTransform(object):
         """
 
         def parse_text(text):
-            match = SHORTCODE_REGEXP.match(text)
+            match = SHORTCODE_REGEXP.search(text)
             if not match:
                 return (None, None)
+            pre = text[:match.start()]
+            post = text[match.end():]
+
             infos = match.groupdict()
             if infos['selfclosing'] is None and infos['content'] is None:
-                return (None, None)
+                return (None, None, pre, post)
             if infos['escapeopen'] and infos['escapeclose']:
                 return ''.join((
                     infos['escapeopen'],
@@ -164,10 +193,10 @@ class ShortcodesTransform(object):
                     arguments[last_key] = "%s %s" % (arguments[last_key], arg)
             arguments['body'] = infos['content']
 
-            return (infos['name'], arguments)
+            return (infos['name'], arguments, pre, post)
 
-        name, arguments = parse_text(text)
-        return self._get_tile(name=name, arguments=arguments)
+        name, arguments, pre, post = parse_text(text)
+        return self._get_tile(name=name, arguments=arguments), pre, post
 
     def _get_tile(self, name=None, arguments=None):
         """Get the tile for the specified shortcode arguments.
@@ -182,7 +211,10 @@ class ShortcodesTransform(object):
         if name in SHORTCODE_TO_TILE_MAPPING:
             name = SHORTCODE_TO_TILE_MAPPING[name]
         baseURL = self.request.getURL()
-        tileHref = urljoin(baseURL, '@@' + name)
+        if name[0] not in ['.','@','/']:
+            tileHref = urljoin(baseURL, '@@' + name)
+        else:
+            tileHref = urljoin(baseURL, name)
 
         # persistent tile
         if TILE_ID_PARAM in arguments:

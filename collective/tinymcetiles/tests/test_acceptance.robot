@@ -22,11 +22,20 @@ ${SHOP_PIC}  http://images.smh.com.au/2012/01/20/2905552/MJtravelwide6_201201201
 
 *** Test Cases ***
 
-Scenario: As an editor I can inset a "DummyTile" in a document
+Scenario: As an editor I can inset a DummyTile in a document
     Given a site owner
       and a new document
      When I insert a "DummyTile" in a document
+      and I save the page
      Then a visitor can view "Test tile rendered"
+
+Scenario: As an editor I can inset a DummyTile as a shortcode
+    Given a site owner
+      and a new document
+     When I insert a "DummyTile" in a document
+     Then I can see in the editor "[dummytile/]"
+
+
 
 Del Boy opens a chippie using tiles
     narrate "Del Boy has a great idea to open a fish and chip shop"
@@ -302,18 +311,26 @@ insert tile "${tile}"
 #  element should be visible  css=form#add-tile
   with the label  ${tile}  select checkbox
   click button  Create
+  click button  Save
 #  page should contain  img
 #  element should be visible css=img.mceTile
+
+I Save the page
   click button  Save
 
 
 # Then
 
 A visitor can view "${text}"
-  wait until page contains  ${text}
-#  Log out
-#  Go to  ${PLONE_URL}/a-document
-#  Page should contain  Test tile rendered
+#  wait until page contains  ${text}
+  Log out
+  Go to  ${PLONE_URL}/a-document
+  Page should contain  ${text}
+
+I can see in the editor "${text}"
+    select frame  css=.mceIframeContainer iframe
+    page should contain  ${text}
+
 
 
 With the label
