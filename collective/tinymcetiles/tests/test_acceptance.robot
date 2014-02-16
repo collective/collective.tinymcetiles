@@ -33,7 +33,7 @@ Scenario: As an editor I can inset a DummyTile as a shortcode
     Given a site owner
       and a new document
      When I insert a "DummyTile" in a document
-     Then I can see in the editor "[dummytile/]"
+     Then I can see in the editor "dummy.tile"
 
 
 
@@ -263,6 +263,13 @@ visual edit "${text}"
     unselect frame
     # see http://stackoverflow.com/questions/17306305/how-to-select-the-text-of-a-tinymce-field-with-robot-framework-and-selenium2libr
 
+visual editor contains "${text}"
+    select frame  css=.mceIframeContainer iframe
+    #Textarea Should Contain  id=content  ${text}
+    page should contain  ${text}
+    unselect frame
+
+
 upload image
     [arguments]     ${url}
     click link  css=.mce_image
@@ -311,7 +318,6 @@ insert tile "${tile}"
 #  element should be visible  css=form#add-tile
   with the label  ${tile}  select checkbox
   click button  Create
-  click button  Save
 #  page should contain  img
 #  element should be visible css=img.mceTile
 
@@ -328,8 +334,7 @@ A visitor can view "${text}"
   Page should contain  ${text}
 
 I can see in the editor "${text}"
-    select frame  css=.mceIframeContainer iframe
-    page should contain  ${text}
+    visual editor contains "${text}"
 
 
 

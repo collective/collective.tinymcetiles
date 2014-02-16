@@ -22,12 +22,8 @@ setup(name='collective.tinymcetiles',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-<<<<<<< HEAD
           'setuptools',
           'plone.api',
-          'plone.app.tiles',
-=======
->>>>>>> master
           'plone.app.blocks',
           'plone.app.tiles',
           'Products.GenericSetup',
@@ -41,6 +37,7 @@ setup(name='collective.tinymcetiles',
               'plone.app.contenttypes',
               'plone.app.event',
               'plone.app.robotframework >=0.7.0rc4',
+              'robotframework_selenium2library >= 1.5.0',
               'plone.app.testing',
               'plone.app.texttile',
               'plone.registry',
