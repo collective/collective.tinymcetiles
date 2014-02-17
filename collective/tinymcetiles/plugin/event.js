@@ -4,6 +4,21 @@ if (typeof String.prototype.startsWith != 'function') {
     return this.indexOf(str) == 0;
   };
 }
+
+
+var qs = (function(url) {
+    var a = url.slice(url.indexOf('?') + 1).split('&');
+    if (a == "") return {};
+    var b = {};
+    for (var i = 0; i < a.length; ++i)
+    {
+        var p=a[i].split('=');
+        if (p.length != 2) continue;
+        b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+    }
+    return b;
+});
+
 (function ($) {
 
     // Init on load
@@ -35,12 +50,17 @@ if (typeof String.prototype.startsWith != 'function') {
                     if  (name.startsWith('./@@')) {
                         name = name.substring(4);
                     }
-
+                    var allvars = qs(name);
+                    name = name.slice(0, name.indexOf('?'));
+                    var params = "";
+                    for (var key in allvars) {
+                        params += ' '+key+'="'+allvars[key]+'"';
+                    }
 
                     $.ajax({
                         url: tiledata.url,
                         success: function(response) {
-                            var shortcode = '[' + name + ']';
+                            var shortcode = '[' + name + params+']';
                             shortcode += response;
                             shortcode += '[/' + name + ']';
                             // Insert content

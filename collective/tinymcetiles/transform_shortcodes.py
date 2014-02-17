@@ -1,3 +1,4 @@
+import urllib
 from lxml.html import builder as E
 from plone.transformchain.interfaces import ITransform
 from plone.app.blocks import utils
@@ -186,7 +187,7 @@ class ShortcodesTransform(object):
                 if '=' in arg:
                     key, value = arg.split('=')
                     key = key.strip()
-                    value = value.strip()
+                    value = value.strip().strip('"')
                     arguments[key] = value
                     last_key = key
                 elif last_key is not None:
@@ -224,7 +225,9 @@ class ShortcodesTransform(object):
         # create a new transient tile
         #context = self.published.aq_parent
         #HACK: we need to encode it into the url again
-        self.request.form.update(arguments)
+        #self.request.form.update(arguments)
         #tile = getMultiAdapter((context, self.request), name=name)
+        if arguments:
+            tileHref += '?' + urllib.urlencode(arguments)
 
         return utils.resolve(tileHref)
