@@ -12,9 +12,10 @@ var qs = (function(url) {
     var b = {};
     for (var i = 0; i < a.length; ++i)
     {
-        var p=a[i].split('=');
+        var p = decodeURIComponent(a[i].replace(/\+/g, " "));
+        p=p.split('=');
         if (p.length != 2) continue;
-        b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+        b[p[0]] = p[1];
     }
     return b;
 });
@@ -50,6 +51,7 @@ var qs = (function(url) {
                     if  (name.startsWith('./@@')) {
                         name = name.substring(4);
                     }
+
                     var allvars = qs(name);
                     name = name.slice(0, name.indexOf('?'));
                     var params = "";

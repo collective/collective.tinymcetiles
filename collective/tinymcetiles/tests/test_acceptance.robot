@@ -25,16 +25,25 @@ ${SHOP_PIC}  http://images.smh.com.au/2012/01/20/2905552/MJtravelwide6_201201201
 Scenario: As an editor I can inset a DummyTile in a document
     Given a site owner
       and a new document
-     When I insert a "DummyTile" in a document
+     When I insert a "Dummy tile" tile in a document
       and I save the page
      Then a visitor can view "Test tile rendered"
 
 Scenario: As an editor I can inset a DummyTile as a shortcode
     Given a site owner
       and a new document
-     When I insert a "DummyTile" in a document
-     Then I can see in the editor "dummy.tile"
+     When I insert a "Dummy tile" tile in a document
+     Then I can see in the editor "[dummy.tile"
+      And I can see in the editor "Test tile rendered"
+# TODO: even dummy tile is too long as it includes id which isn't needed
 
+Scenario: As an editor I can inset a list tile as a shortcode
+    Given a site owner
+      and a new document
+     When I insert a "Content listing" tile in a document
+     Then I can see in the editor "[plone.app.contentlistingtile"
+      And I can see in the editor "view_template="listing_view""
+      And I can see in the editor "path:relativePath="."]"
 
 
 Del Boy opens a chippie using tiles
@@ -303,12 +312,13 @@ A new document
 
 # When
 
-When I insert a "DummyTile" in a document
+When I insert a "${tilename}" tile in a document
   Go to  ${PLONE_URL}/a-document/edit
 #    Select Frame  pools_to_register_iframe
-  insert tile "Dummy tile"
+  insert tile "${tilename}"
   # still editing in tinymce
   click button  Save
+
 
 insert tile "${tile}"
   element should be visible  css=.mceLayout .mceToolbar
