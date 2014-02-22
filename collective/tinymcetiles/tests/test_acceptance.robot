@@ -43,7 +43,7 @@ Scenario: As an editor I can inset a list tile as a shortcode
      When I insert a "Content listing" tile in a document
      Then I can see in the editor "[plone.app.contentlistingtile"
       And I can see in the editor "view_template="listing_view""
-      And I can see in the editor "path:relativePath="."]"
+      And I can see in the editor "path="."]"
 
 
 Del Boy opens a chippie using tiles
