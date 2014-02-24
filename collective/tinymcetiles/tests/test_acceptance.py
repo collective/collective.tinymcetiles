@@ -29,5 +29,5 @@ class Keywords(object):
 
     def wait_for_speech(self, words, perword):
         count = len(words.split())
-        secs = count*float(perword) + 2*float(perword)
-        BuiltIn().sleep("%fs" % secs)
+        secs = count * float(perword) + 2 * float(perword)
+        BuiltIn().sleep('%fs' % secs)

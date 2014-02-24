@@ -18,6 +18,7 @@ import plone.app.contenttypes
 import plone.app.event
 from plone.app.robotframework.testing import SPEAKJS_FIXTURE
 
+
 class DummyTile(Tile):
     def __call__(self):
         return u"""\

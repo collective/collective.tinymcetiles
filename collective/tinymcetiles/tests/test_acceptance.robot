@@ -22,14 +22,14 @@ ${SHOP_PIC}  http://images.smh.com.au/2012/01/20/2905552/MJtravelwide6_201201201
 
 *** Test Cases ***
 
-Scenario: As an editor I can inset a DummyTile in a document
+Scenario: As an editor I can insert a DummyTile in a document
     Given a site owner
       and a new document
      When I insert a "Dummy tile" tile in a document
       and I save the page
      Then a visitor can view "Test tile rendered"
 
-Scenario: As an editor I can inset a DummyTile as a shortcode
+Scenario: As an editor I can insert a DummyTile as a shortcode
     Given a site owner
       and a new document
      When I insert a "Dummy tile" tile in a document
@@ -37,7 +37,7 @@ Scenario: As an editor I can inset a DummyTile as a shortcode
       And I can see in the editor "Test tile rendered"
 # TODO: even dummy tile is too long as it includes id which isn't needed
 
-Scenario: As an editor I can inset a list tile as a shortcode
+Scenario: As an editor I can insert a list tile as a shortcode
     Given a site owner
       and a new document
      When I insert a "Content listing" tile in a document
@@ -45,6 +45,12 @@ Scenario: As an editor I can inset a list tile as a shortcode
       And I can see in the editor "view_template="listing_view""
       And I can see in the editor "path="."]"
 
+Scenario: As an editor I can list the contents of a page
+    Given a site owner
+      and a new document
+     When I insert a "Content listing" tile in a document
+      And Click Button  Save
+     Then a visitor can view "no results found"
 
 Del Boy opens a chippie using tiles
     narrate "Del Boy has a great idea to open a fish and chip shop"

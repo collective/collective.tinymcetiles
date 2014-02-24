@@ -3,7 +3,6 @@ from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.app.testing import login
-from plone.app.textfield import RichTextValue
 import transaction
 import unittest2 as unittest
 from zope.component import getUtility
@@ -48,7 +47,7 @@ class IntegrationTestCase(unittest.TestCase):
         self.folder['d1'].setTitle(u"New title")
         self.folder['d1'].setText(u"<p>[dummy.tile/tile-1 /]</p>")
         self.folder['d1'].getField('text').setContentType(self.folder['d1'],
-                                                          "text/html")
+                                                          'text/html')
 
         transaction.commit()
 
@@ -56,9 +55,9 @@ class IntegrationTestCase(unittest.TestCase):
         browser.handleErrors = False
 
         browser.open(self.folder['d1'].absolute_url())
-        self.assertIn("Test tile rendered", browser.contents)
-        self.assertIn("<p>With child tags</p>", browser.contents)
-        self.assertIn("And tail text", browser.contents)
+        self.assertIn('Test tile rendered', browser.contents)
+        self.assertIn('<p>With child tags</p>', browser.contents)
+        self.assertIn('And tail text', browser.contents)
 
 
 def test_suite():

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import urllib
 from lxml.html import builder as E
 from plone.transformchain.interfaces import ITransform
@@ -129,33 +130,35 @@ class ShortcodesTransform(object):
         # replace the element's text with the tile body
         # XXX: this should be done differently probably
         tile_body = tile_tree.find('body')
-        if tile_body is not None:
-            # insert nodes before out matched nodes
+        if tile_body is None:
+            return tree
 
-            # insert tile target with tile body
-            tileBody = tile_tree.find('body')
-            # Preserve text
-            if pre:
-                n=E.SPAN()
-                n.text = pre
-                first.addprevious(n)
-            if tileBody.text:
-                tileTextSpan = E.SPAN()
-                tileTextSpan.text = tileBody.text
-                first.addprevious(tileTextSpan)
+        # insert nodes before out matched nodes
 
-            # Copy other nodes
-            for tileBodyChild in tileBody:
-                first.addprevious(tileBodyChild)
-            if post:
-                n=E.SPAN()
-                n.text = post
-                first.addprevious(n)
+        # insert tile target with tile body
+        tileBody = tile_tree.find('body')
+        # Preserve text
+        if pre:
+            n = E.SPAN()
+            n.text = pre
+            first.addprevious(n)
+        if tileBody.text:
+            tileTextSpan = E.SPAN()
+            tileTextSpan.text = tileBody.text
+            first.addprevious(tileTextSpan)
 
-            # remove the matched nodes
-            parent = first.getparent()
-            for child in elements:
-                parent.remove(child)
+        # Copy other nodes
+        for tileBodyChild in tileBody:
+            first.addprevious(tileBodyChild)
+        if post:
+            n = E.SPAN()
+            n.text = post
+            first.addprevious(n)
+
+        # remove the matched nodes
+        parent = first.getparent()
+        for child in elements:
+            parent.remove(child)
         return tree
 
     def _get_tile_tree(self, text):
@@ -191,7 +194,7 @@ class ShortcodesTransform(object):
                     arguments[key] = value
                     last_key = key
                 elif last_key is not None:
-                    arguments[last_key] = "%s %s" % (arguments[last_key], arg)
+                    arguments[last_key] = '%s %s' % (arguments[last_key], arg)
             arguments['body'] = infos['content']
 
             return (infos['name'], arguments, pre, post)
@@ -212,7 +215,7 @@ class ShortcodesTransform(object):
         if name in SHORTCODE_TO_TILE_MAPPING:
             name = SHORTCODE_TO_TILE_MAPPING[name]
         baseURL = self.request.getURL()
-        if name[0] not in ['.','@','/']:
+        if name[0] not in ['.', '@', '/']:
             tileHref = urljoin(baseURL, '@@' + name)
         else:
             tileHref = urljoin(baseURL, name)
