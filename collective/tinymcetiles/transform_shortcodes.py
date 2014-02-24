@@ -88,9 +88,18 @@ class ShortcodesTransform(object):
             for next in element.itersiblings():
                 shortcode_nodes.append(next)
                 if next in elements:
-                    self._resolve_tile(tree, shortcode_nodes)
-
-            #tree = self._resolve_tile(tree, element)
+                    # shortcode_nodes now has '[' in start and end nodes
+                    # due to how tinymce inserts things. our shortcode is likely something like
+                    # <p>[code]</p><div/><p>[/code]</p>
+                    first = element
+                    last = next
+                    text = first.text
+                    text += ''.join([etree.tostring(n) for n in elements[1:-2]])
+                    text += last.text
+                    tile_tree, pre, post = self._get_tile_tree(text)
+                    if tile_tree is None:
+                        continue
+                    tree = self._resolve_tile(tree, tile_tree, pre, post, shortcode_nodes)
 
         if tree is None:
             return None
@@ -103,41 +112,22 @@ class ShortcodesTransform(object):
 
         return result
 
-    def _resolve_tile(self, tree=None, elements=[]):
+    def _resolve_tile(self, tree, tile_tree, pre, post, elements=[]):
         """Try to resolve the tile and merge it into the tree."""
 
         root = tree.getroot()
-        head_node = root.find('head')
-        if elements is []:
-            return root
-        # due to how tinymce inserts things. our shortcode is likely something like
-        # <p>[code]</p><div/><p>[/code]</p>
-        first = elements[0]
-        text = first.text
-        text += ''.join([etree.tostring(n) for n in elements[1:-2]])
-        text += elements[-1].text
-        tile_tree, pre, post = self._get_tile_tree(text)
-
-        if tile_tree is None:
-            return tree
-
-        # merge tile head into the page's head
-        tile_head = tile_tree.find('head')
-        if tile_head is not None:
-            for node in tile_head:
-                head_node.append(node)
+        self._merge_head(root, tile_tree)
 
         # replace the element's text with the tile body
         # XXX: this should be done differently probably
-        tile_body = tile_tree.find('body')
-        if tile_body is None:
+        tileBody = tile_tree.find('body')
+        if tileBody is None:
             return tree
 
         # insert nodes before out matched nodes
-
         # insert tile target with tile body
-        tileBody = tile_tree.find('body')
         # Preserve text
+        first = elements[0]
         if pre:
             n = E.SPAN()
             n.text = pre
@@ -160,6 +150,15 @@ class ShortcodesTransform(object):
         for child in elements:
             parent.remove(child)
         return tree
+
+    def _merge_head(self, root, tile_tree):
+        head_node = root.find('head')
+
+        # merge tile head into the page's head
+        tile_head = tile_tree.find('head')
+        if tile_head is not None:
+            for node in tile_head:
+                head_node.append(node)
 
     def _get_tile_tree(self, text):
         """Find shortcodes in the provided text and resolve them to tiles.
