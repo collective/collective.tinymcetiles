@@ -12,13 +12,13 @@ Test Setup  Open test browser
 Test Teardown  Close all browsers
 
 *** Variables ***
-${SLEEP}  0.4
-# to speed up: bin/robot -t "Del Boy opens a chippie using tiles" -v SLEEP:0
+${SLEEP}  0.0
+# to slow down: bin/robot -t "Del Boy opens a chippie using tiles" -v SLEEP:0.4
 
 ${CHIP_PIC}  http://3.bp.blogspot.com/-u1HS4kzoGuM/UfNzwLcl0BI/AAAAAAAAG0w/otZtiEHx72w/s1600/DSC_7515.jpg
-${FISH_PIC}  http://www.messersmith.name/wordpress/wp-content/uploads/2009/11/titan_triggerfish_balistoides_viridescens_P7290834.jpg
-${SHOP_PIC}  http://images.smh.com.au/2012/01/20/2905552/MJtravelwide6_20120120132625161061-420x0.jpg
-
+${FISH_PIC}  http://lh6.ggpht.com/-f783aKIwr1c/T6_LcpY0tHI/AAAAAAAADmU/HzDXiAEsfWs/Golden%252520Union_thumb%25255B2%25255D.jpg?imgmax=800
+${SHOP_PIC}  http://www.thefishandchipshop.uk.com/wp-content/themes/fishnchip/images/logo.png
+#${SHOP_PIC}  http://stumblingintoparadise.files.wordpress.com/2012/07/fryers-delight1.jpg
 
 *** Test Cases ***
 
@@ -110,6 +110,12 @@ Del Boy opens a chippie using tiles
     with the label  Content listing  select checkbox
     click button  Create
     Show pointy note on "Content Listing > Criteria" "by default we list current contents just like a folder view would have"
+# friggen bug in plone.formwidget.querystring
+#    with the label  Add criterion  select from list by label   Type
+    select from list by label  css=.addIndex  Type
+    click element  css=.arrowDownAlternative
+    select checkbox  xpath=//label[contains(., "Page")]//input
+
     #TODO we need to restrict it to pages so the shop image isn't listed
     #TODO: display view is off the page so we can't select it. Need to make box bigger or work out how to scroll
     #TODO: should make summary view defaul anyway
@@ -139,10 +145,10 @@ Del Boy opens a chippie using tiles
     Click "Add New > Page"
     with the label  Title  input text  Chips
     with the label  Summary  input text  Potato dipped in fat
-    click button  Save
+    Save Page
     click link    Edit
     upload image  ${CHIP_PIC}
-    click button  Save
+    Save Page
     click link  Menus
 
     narrate "Chips have automatically been added to the menu"
@@ -209,7 +215,8 @@ show pointy note on "Content Image" "${note}"
 Click Button Insert Tile
     Click Link  css=.mce_plonetiles
 
-Use Dialog "Add Tile"
+Use Dialog "${title}"
+    select window
     select frame  css=.plonepopup iframe
 
 Show pointy note on "Tile Type > Content Listing" "${note}"
@@ -287,17 +294,18 @@ visual editor contains "${text}"
 
 upload image
     [arguments]     ${url}
+    ${file}=  download file  ${url}
     click link  css=.mce_image
     select frame  css=.plonepopup iframe
     # external images doesn't help our demo of showing containment
     #click link  External
     #input text  css=#imageurl  ${url}
-    ${file}=  download file  ${url}
     click link  upload
     choose file  id=uploadfile  ${file}
     click button  Upload
     select from list by label  classes  Right
     select from list by label  dimensions  Mini (200x200)
+    with the label  Link Title  input text  My Image
     #sleep   1s
     Wait Until Keyword Succeeds  10s  0.5s  Element Should Be Enabled  css=input#insert-selection
     click button  OK
@@ -334,8 +342,7 @@ insert tile "${tile}"
 #  element should be visible  css=form#add-tile
   with the label  ${tile}  select checkbox
   click button  Create
-#  page should contain  img
-#  element should be visible css=img.mceTile
+
 
 I Save the page
   click button  Save
@@ -363,3 +370,6 @@ label "${title}"
     [Return]  ${for}
     ${for}=  Get Element Attribute  xpath=//label[contains(., "${title}")]@for
 
+label2 "${title}"
+    [Return]  ${for}
+    ${for}=  Get Element Attribute  xpath=//label[contains(., "${title}")]//input

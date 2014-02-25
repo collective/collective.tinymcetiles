@@ -3,7 +3,7 @@ import urllib
 from lxml.html import builder as E
 from plone.transformchain.interfaces import ITransform
 from plone.app.blocks import utils
-from repoze.xmliter.serializer import XMLSerializer
+from repoze.xmliter.serializer import XMLSerializer, lxml
 from urlparse import urljoin
 from zope.interface import implements
 from lxml import etree
@@ -91,11 +91,10 @@ class ShortcodesTransform(object):
                     # shortcode_nodes now has '[' in start and end nodes
                     # due to how tinymce inserts things. our shortcode is likely something like
                     # <p>[code]</p><div/><p>[/code]</p>
-                    first = element
-                    last = next
-                    text = first.text
-                    text += ''.join([etree.tostring(n) for n in elements[1:-2]])
-                    text += last.text
+                    text = shortcode_nodes[0].text
+                    text += u''.join([lxml.html.tostring(n, encoding="ascii")
+                                      for n in elements[1:-2]])
+                    text += shortcode_nodes[-1].text
                     tile_tree, pre, post = self._get_tile_tree(text)
                     if tile_tree is None:
                         continue
