@@ -3,10 +3,10 @@ import urllib
 from lxml.html import builder as E
 from plone.transformchain.interfaces import ITransform
 from plone.app.blocks import utils
-from repoze.xmliter.serializer import XMLSerializer, lxml
+from repoze.xmliter.serializer import XMLSerializer
+from repoze.xmliter.serializer import lxml
 from urlparse import urljoin
 from zope.interface import implements
-from lxml import etree
 
 import logging
 import re
