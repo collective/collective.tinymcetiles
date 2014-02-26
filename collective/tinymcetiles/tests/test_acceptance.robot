@@ -43,14 +43,14 @@ Scenario: As an editor I can insert a list tile as a shortcode
      When I insert a "Content listing" tile in a document
      Then I can see in the editor "[plone.app.contentlistingtile"
       And I can see in the editor "view_template="listing_view""
-      And I can see in the editor "path="."]"
+      And I can see in the editor "path=".::1"]"
 
 Scenario: As an editor I can list the contents of a page
     Given a site owner
       and a new document
      When I insert a "Content listing" tile in a document
       And Click Button  Save
-     Then a visitor can view "no results found"
+     Then a visitor can view "There are currently no items in this folder."
 
 Del Boy opens a chippie using tiles
     narrate "Del Boy has a great idea to open a fish and chip shop"
@@ -153,9 +153,9 @@ Del Boy opens a chippie using tiles
     #TODO point at chip item instead of just narrate
 
 
-    narrate "Shortcides can be modified via the tile button"
+    narrate "Shortcodes can be modified via the tile button"
     #TODO should show reediting an existing tile
-    narrate "or shortcodes parameters can be edited directly in tinymce"
+    narrate "or shortcodes parameters can be edited directly in the visual editor"
     #TODO should show manualy editing an existing tile, or just inserting a tile by hand
 
     narrate "Shortcodes can be used in static text portlets."
@@ -163,7 +163,7 @@ Del Boy opens a chippie using tiles
     narrate "we will replace most specialised portlets"
     #TODO show adding tile into a static text portlet to show how tiles can replace portlets
     # e.g. no more collection portlet, news portlet or upcoming events portlets
-    narrate "With a new contentalias tile we can reuse content in many places in a site"
+    narrate "With a new content-alias tile we can reuse content in many places in a site"
 
 
 
