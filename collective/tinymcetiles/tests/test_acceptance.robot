@@ -116,7 +116,6 @@ Del Boy opens a chippie using tiles
     click element  css=.arrowDownAlternative
     select checkbox  xpath=//label[contains(., "Page")]//input
 
-    #TODO we need to restrict it to pages so the shop image isn't listed
     #TODO: display view is off the page so we can't select it. Need to make box bigger or work out how to scroll
     #TODO: should make summary view defaul anyway
     #Show pointy note on "Content Listing > Display Mode" "He can choose how he wants it displayed"
@@ -127,12 +126,10 @@ Del Boy opens a chippie using tiles
     narrate "A shortcode is a technique made popular with wordpress"
     narrate "It allows you to insert the same content or functionality over and over, whereever you want in the page"
     narrate "Plone tiles are our short codes. The format allow for the tile url, includeing type and id if it's persistent"
-    narrate "followed by parameters. In betten the square brackets could be a single rich text parameter"
+    narrate "followed by parameters. In between the square brackets could be a single rich text parameter"
     narrate "or for the listing tile, it's used to show a preview of what the listing might render as"
     narrate "once rendered the preview is thrown away and the shortcode replaced by the html the tile renders"
-    #TODO need to switch to actual using shortcodes instead of image placeholders
     #TODO point to shortcode in editor and a preview of what the listing will look like (hopefully)
-    #TODO make preview work with shortcodes
 
     click button  Save
     narrate "not only has he automated his menu, but with content above and below it, it's more flexible than using collections"
@@ -156,13 +153,17 @@ Del Boy opens a chippie using tiles
     #TODO point at chip item instead of just narrate
 
 
-
+    narrate "Shortcides can be modified via the tile button"
     #TODO should show reediting an existing tile
-
+    narrate "or shortcodes parameters can be edited directly in tinymce"
     #TODO should show manualy editing an existing tile, or just inserting a tile by hand
 
+    narrate "Shortcodes can be used in static text portlets."
+    narrate "with views for calender, news, events on contentlistingtile"
+    narrate "we will replace most specialised portlets"
     #TODO show adding tile into a static text portlet to show how tiles can replace portlets
     # e.g. no more collection portlet, news portlet or upcoming events portlets
+    narrate "With a new contentalias tile we can reuse content in many places in a site"
 
 
 
