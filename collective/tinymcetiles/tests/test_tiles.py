@@ -3,6 +3,7 @@ from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.app.testing import login
+from plone.app.textfield import RichTextValue
 import transaction
 import unittest2 as unittest
 from zope.component import getUtility
@@ -44,17 +45,18 @@ class IntegrationTestCase(unittest.TestCase):
             self.portal.invokeFactory('Document', 'test-folder')
         self.folder = self.portal['test-folder']
         self.folder.invokeFactory('Document', 'd1')
-        self.folder['d1'].setTitle(u"New title")
-        self.folder['d1'].setText(u"<p>[dummy.tile/tile-1 /]</p>")
-        self.folder['d1'].getField('text').setContentType(self.folder['d1'],
-                                                          'text/html')
+        d1 = self.folder.get('d1')
+        d1.setTitle(u'New title')
+        #TODO. need to test other ways to write a shortcode
+        d1.text = RichTextValue(u'<p>[dummy.tile]</p>blah<p>[/dummy.tile]</p>',
+                                'text/html', 'text/x-html-safe', 'utf-8')
 
         transaction.commit()
 
         browser = Browser(self.portal)
         browser.handleErrors = False
 
-        browser.open(self.folder['d1'].absolute_url())
+        browser.open(d1.absolute_url())
         self.assertIn('Test tile rendered', browser.contents)
         self.assertIn('<p>With child tags</p>', browser.contents)
         self.assertIn('And tail text', browser.contents)
