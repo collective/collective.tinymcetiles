@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-import logging
-from urlparse import urljoin
-from lxml.html import builder as E
-from repoze.xmliter.serializer import XMLSerializer
-from zope.interface import implements
-from plone.transformchain.interfaces import ITransform
-from plone.app.blocks import utils
 from ZODB.POSException import ConflictError
+from lxml.html import builder as E
+from plone.app.blocks import utils
+from plone.transformchain.interfaces import ITransform
+from repoze.xmliter.serializer import XMLSerializer
+from urlparse import urljoin
+from zope.interface import implements
+import logging
 
 log = logging.getLogger('collective.tinymcetiles')
 

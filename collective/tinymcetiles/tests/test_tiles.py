@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-from plone.app.testing import setRoles
-from plone.app.testing import TEST_USER_ID
-from plone.app.testing import TEST_USER_NAME
-from plone.app.testing import login
-from plone.app.textfield import RichTextValue
-import transaction
-import unittest2 as unittest
-from zope.component import getUtility
 from Products.CMFCore.utils import getToolByName
 from Products.TinyMCE.interfaces.utility import ITinyMCE
 from collective.tinymcetiles.testing import TILES_INTEGRATION_TESTING
+from plone.app.testing import TEST_USER_ID
+from plone.app.testing import TEST_USER_NAME
+from plone.app.testing import login
+from plone.app.testing import setRoles
+from plone.app.textfield import RichTextValue
 from plone.testing.z2 import Browser
+from zope.component import getUtility
+import transaction
+import unittest2 as unittest
 
 
 class IntegrationTestCase(unittest.TestCase):

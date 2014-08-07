@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import unittest
-import robotsuite
-from plone.testing import layered
 from collective.tinymcetiles.testing import TILES_ROBOT_TESTING
-import urllib
-import os
+from plone.testing import layered
 from robot.libraries.BuiltIn import BuiltIn
+import os
+import robotsuite
+import unittest
+import urllib
 
 
 def test_suite():
@@ -30,4 +30,4 @@ class Keywords(object):
     def wait_for_speech(self, words, perword):
         count = len(words.split())
         secs = count*float(perword) + 2*float(perword)
-        BuiltIn().sleep("%fs" % secs)
+        BuiltIn().sleep('%fs' % secs)
