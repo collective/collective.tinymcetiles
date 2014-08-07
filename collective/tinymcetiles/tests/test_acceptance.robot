@@ -152,6 +152,7 @@ show pointy note on "Breadcrumbs" "${note}"
 
 
 show pointy note on "Insert tile button" "${note}"
+    Page should contain element  css=.mce_plonetiles
     show pointy note  css=.mce_plonetiles
     ...   ${note}
     ...   top
