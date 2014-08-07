@@ -17,6 +17,7 @@ import plone.app.contentlistingtile
 import plone.app.contenttypes
 import plone.app.event
 
+
 class DummyTile(Tile):
     def __call__(self):
         return u"""\
@@ -32,10 +33,11 @@ class TilesLayer(PloneSandboxLayer):
     def setUpZope(self, app, configurationContext):
         # Load ZCML for this package
 
-#        xmlconfig.file('configure.zcml', Products.DateRecurringIndex,
-#                       context=configurationContext)
-#        xmlconfig.file('configure.zcml', plone.app.event,
-#                       context=configurationContext)
+        # xmlconfig.file('configure.zcml', Products.DateRecurringIndex,
+        #                context=configurationContext)
+        # xmlconfig.file('configure.zcml', plone.app.event,
+        #                context=configurationContext)
+
         z2.installProduct(app, 'Products.DateRecurringIndex')
         xmlconfig.file('configure.zcml', plone.app.contenttypes,
                        context=configurationContext)
@@ -44,7 +46,8 @@ class TilesLayer(PloneSandboxLayer):
         xmlconfig.file('configure.zcml', plone.app.contentlistingtile,
                        context=configurationContext)
         xmlconfig.string("""\
-<configure package="collective.tinymcetiles" xmlns="http://namespaces.plone.org/plone">
+<configure package="collective.tinymcetiles"
+           xmlns="http://namespaces.plone.org/plone">
     <tile
         name="dummy.tile"
         title="Dummy tile"

@@ -51,12 +51,12 @@ def resolveTiles(request, tree):
     placehodlers and resolve them to actual tiles.
     """
 
-    #renderView = None
-    #renderedRequestKey = None
+    # renderView = None
+    # renderedRequestKey = None
 
     # Optionally enable ESI rendering
-    #registry = queryUtility(IRegistry)
-    #if registry is not None:
+    # registry = queryUtility(IRegistry)
+    # if registry is not None:
     #    if registry.forInterface(IBlocksSettings).esi:
     #        renderView = 'plone.app.blocks.esirenderer'
     #        renderedRequestKey = 'plone.app.blocks.esi'
