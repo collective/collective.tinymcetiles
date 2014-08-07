@@ -88,8 +88,9 @@ Del Boy opens a chippie using tiles
     Show pointy note on "Content Listing > Criteria" "by default we list current contents just like a folder view would have"
     #TODO we need to restrict it to pages so the shop image isn't listed
     Show pointy note on "Content Listing > Display Mode" "He can choose how he wants it displayed"
-    Select "Content Listing > Display Mode" "Summary View"
+    Select "Content Listing > Display Mode" "Summary view"
     click button  Save
+    unselect frame
 
     narrate "The tile is inserted as a shortcode"
     narrate "including a preview of what the listing will look like"
@@ -161,7 +162,7 @@ show pointy note on "Menus" "${note}"
     ...   top
 
 show pointy note on "Visual Editor" "${note}"
-    show pointy note  css=#formfield-form-widgets-IRichText-text
+    show pointy note  css=#formfield-form-widgets-text
     ...   ${note}
     ...   top
 
@@ -249,6 +250,7 @@ visual edit "${text}"
 
 upload image
     [arguments]     ${url}
+    Page should contain element  css=.mce_image
     click link  css=.mce_image
     select frame  css=.plonepopup iframe
     # external images doesn't help our demo of showing containment
