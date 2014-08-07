@@ -161,7 +161,7 @@ show pointy note on "Menus" "${note}"
     ...   top
 
 show pointy note on "Visual Editor" "${note}"
-    show pointy note  css=#formfield-form-widgets-text
+    show pointy note  css=#formfield-form-widgets-IRichText-text
     ...   ${note}
     ...   top
 
@@ -263,6 +263,7 @@ upload image
     #sleep   1s
     Wait Until Keyword Succeeds  10s  0.5s  Element Should Be Enabled  css=input#insert-selection
     click button  OK
+    unselect frame
     
 
 
@@ -295,9 +296,10 @@ insert tile "${tile}"
 #  element should be visible  css=form#add-tile
   with the label  ${tile}  select checkbox
   click button  Create
+  click button  Save
+  unselect Frame
 #  page should contain  img
 #  element should be visible css=img.mceTile
-  click button  Save
 
 
 # Then
