@@ -267,7 +267,7 @@ upload image
     Wait Until Keyword Succeeds  10s  0.5s  Element Should Be Enabled  css=input#insert-selection
     click button  OK
     unselect frame
-    
+
 
 
 # Given
