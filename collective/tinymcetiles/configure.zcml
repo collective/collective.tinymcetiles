@@ -9,6 +9,37 @@
     <include package="plone.app.blocks"/>
     <include package="plone.app.tiles"/>
 
+    <!-- Custom tile add and edit view -->
+    <adapter
+        for="zope.annotation.interfaces.IAnnotatable
+             .interfaces.ITinyMCETilesLayer
+             plone.tiles.interfaces.ITileType"
+        provides="plone.app.tiles.interfaces.ITileAddView"
+        factory=".browser.TinyMCETilesAddView"
+        />
+
+    <class class=".browser.TinyMCETilesAddView">
+        <require
+            permission="cmf.ModifyPortalContent"
+            interface="zope.publisher.interfaces.browser.IBrowserPage"
+            />
+    </class>
+
+    <adapter
+        for="zope.annotation.interfaces.IAnnotatable
+             .interfaces.ITinyMCETilesLayer
+             plone.tiles.interfaces.ITileType"
+        provides="plone.app.tiles.interfaces.ITileEditView"
+        factory=".browser.TinyMCETilesEditView"
+        />
+
+    <class class=".browser.TinyMCETilesEditView">
+        <require
+            permission="cmf.ModifyPortalContent"
+            interface="zope.publisher.interfaces.browser.IBrowserPage"
+            />
+    </class>
+
     <configure zcml:condition="not-installed plone.app.deco">
         <!-- redefine since we don't want to rely on deco -->
         <permission

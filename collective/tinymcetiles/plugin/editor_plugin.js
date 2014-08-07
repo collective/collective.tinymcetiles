@@ -21,6 +21,9 @@
                     // Get url
                     var url = ed.dom.getAttrib(ed.selection.getNode(), 'alt');
                     url = url.replace(/@@/, '@@edit-tile/');
+                    // XXX: Nowadays the edit traverse seem to always require
+                    // an id. It could be set e.g. to ID of the tile tag
+                    url = url.replace(/\?/, '/anonymous?');
                     url = new tinymce.util.URI(ed.settings.document_url).toAbsolute(url);
 
                     // Open add tile menu
@@ -74,7 +77,9 @@
 
                     // Get delete url
                     var url = this._tiles[i].split('@@')[1].split('/');
-                    url = new tinymce.util.URI(ed.settings.document_url).toAbsolute('./@@delete-tile?type=' + url[0] + '&id=' + url[1] + '&confirm=true');
+                    // XXX: Nowadays the delete traverse seem to always require
+                    // an id. It could be set e.g. to ID of the tile tag
+                    url = new tinymce.util.URI(ed.settings.document_url).toAbsolute('./@@delete-tile/' + url[0].split('?')[0] + '/undefined');
 
                     // Do ajax call
                     tinymce.util.XHR.send({
